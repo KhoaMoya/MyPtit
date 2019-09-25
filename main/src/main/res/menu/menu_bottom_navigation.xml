@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created at 9/25/19 3:13 PM by Khoa
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/page_home"
+        android:icon="@drawable/thong_bao"
+        android:title="Thông báo"
+        app:showAsAction="always"/>
+    <item android:id="@+id/page_dang_ki"
+        android:icon="@drawable/dang_ki_mon"
+        android:title="Đăng kí môn học"
+        app:showAsAction="always"/>
+    <item android:id="@+id/page_tin_nhan"
+        android:icon="@drawable/tin_nhan"
+        android:title="Tin nhắn"
+        app:showAsAction="always"/>
+    <item android:id="@+id/page_thoi_khoa_bieu"
+        android:icon="@drawable/thoi_khoa_bieu"
+        android:title="Thời khóa biểu"
+        app:showAsAction="always"/>
+    <item android:id="@+id/page_ca_nhan"
+        android:icon="@drawable/ca_nhan"
+        android:title="Cá nhân"
+        app:showAsAction="always"/>
+</menu>

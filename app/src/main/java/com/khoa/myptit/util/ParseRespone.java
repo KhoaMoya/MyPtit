@@ -27,7 +27,7 @@ public class ParseRespone {
                 try {
                     Document mDocument = mResponse.parse();
                     Element mElementUserName = mDocument.select("span[id=\"ctl00_Header1_ucLogout_lblNguoiDung\"]").first();
-                    Log.e("Loi", mElementUserName.text());
+                    Log.e("Loi", "Nguoi dung: " + mElementUserName.text());
                     if (mElementUserName != null) {
                         if (!mElementUserName.text().equals("")) {
                             Map<String, String> loginCookies = mResponse.cookies();
@@ -44,6 +44,8 @@ public class ParseRespone {
                 } catch (IOException e) {
                     Log.e("Loi", e.getMessage());
                 }
+            } else {
+                Log.e("Loi", "Loi jsoup: " + downloader.getError());
             }
         }
         return false;

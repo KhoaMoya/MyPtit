@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupBindings(savedInstanceState);
 
-        ThongBaoFragment thongBaoFragment = new ThongBaoFragment();
+        ThongBaoFragment thongBaoFragment = ThongBaoFragment.getInstance();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, thongBaoFragment)

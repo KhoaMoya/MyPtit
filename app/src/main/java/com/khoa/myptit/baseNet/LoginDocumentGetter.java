@@ -17,7 +17,7 @@ public class LoginDocumentGetter extends Downloader{
 
 
     public LoginDocumentGetter(User mUser) {
-        super(URL.URL_THONG_BAO, mUser);
+        super(URL.URL_LOGIN, mUser);
     }
 
     @Override

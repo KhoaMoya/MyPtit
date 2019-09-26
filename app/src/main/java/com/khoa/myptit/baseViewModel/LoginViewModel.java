@@ -26,7 +26,7 @@ public class LoginViewModel extends ViewModel {
 
     public void init(Context context) {
         mContext = context;
-        mShowPassword = new MutableLiveData<>(false);
+        mShowPassword = new MutableLiveData<>(true);
         mLoginStatus = new MutableLiveData<>();
     }
 

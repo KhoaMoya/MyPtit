@@ -1,0 +1,10 @@
+<!--
+  ~ Created at 9/25/19 5:08 PM by Khoa 
+  -->
+
+<resources>
+    <string name="app_name">thongbao</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

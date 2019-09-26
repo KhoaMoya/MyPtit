@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created at 9/25/19 5:23 PM by Khoa
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/fragment_thongbao">
+
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorBlack75"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="Time"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="@+id/txt_title"
+        app:layout_constraintTop_toBottomOf="@+id/txt_title" />
+
+    <TextView
+        android:id="@+id/txt_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:text="Để hỗ trợ sinh viên hoàn thành việc đăng ký các học phần Tốt nghiệp theo quy định, Phòng Giáo vụ thông báo về việc tiếp nhận, hỗ trợ xử lý Đơn cho sinh viên, cụ thể như sau:
+        1.      Đối tượng:
+     -   Tất cả Sinh viên các ngành khối Kỹ thuật D15, L17 và sinh viên các khóa trước còn thời hạn đào tạo, chưa hoàn thành việc đăng ký 2 học phần thay thế tốt nghiệp.
+         2.      Hình thức, thời gian nộp Đơn:
+-  Sinh viên làm Đơn theo Mẫu, nộp tại Phòng giáo vụ - Ô số 1 - Văn phòng 1 cửa từ ngày 25/09/2019 đến hết ngày 27/09/2019.
+3.      Thời gian, kết quả xử lý đơn:
+
+     -   Phòng Giáo vụ sẽ xử lý Đơn, hỗ trợ đăng ký cho sinh viên trong các ngày 30/09 đến 01/10/2019, từ ngày 02/10/2019 sinh viên đăng nhập vào hệ thống qldt.ptit.edu để xem kết quả xử lý Đơn cũng như lịch học cá nhân./."
+        android:textColor="@color/colorBlack50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txt_title"
+        app:layout_constraintTop_toBottomOf="@+id/txt_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,6 @@ package com.khoa.myptit.net;
 import android.util.Log;
 
 import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.util.ParseRespone;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Connection;
@@ -28,7 +27,6 @@ public class DocumentGetter extends Downloader {
                     .method(Connection.Method.GET)
                     .timeout(10000)
                     .execute();
-
 
         } catch (Exception e){
             mError = e.getMessage();

@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -14,11 +15,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.khoa.main_activity.MainActivity;
 import com.khoa.myptit.baseViewModel.LoginViewModel;
 import com.khoa.myptit.databinding.ActivityLoginBinding;
 import com.khoa.myptit.net.LoginDocumentGetter;
@@ -63,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             mLoginViewModel.init(this);
         }
         mActivityLoginBinding.setLoginViewModel(mLoginViewModel);
+        mActivityLoginBinding.edtUsername.requestFocus();
     }
 
     public void setupShowPasswordClick(){
@@ -91,7 +93,9 @@ public class LoginActivity extends AppCompatActivity {
                 } else if(loginStatus == LoginViewModel.LoginStatus.SUCCESS) {
                     mProgressDialog.hide();
                     Log.e("Loi", "Login success");
-                    Toast.makeText(getBaseContext(), "Login success", Toast.LENGTH_SHORT).show();
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish();
                 } else {
                     mProgressDialog.hide();
                     Log.e("Loi", "Login fail");

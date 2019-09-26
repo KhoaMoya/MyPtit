@@ -41,7 +41,7 @@ public class Permission {
 
     private void requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(mActivity, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity, "Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(mActivity, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }

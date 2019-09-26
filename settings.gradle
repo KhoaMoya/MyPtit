@@ -1,2 +1,2 @@
-include ':app', ':main'
+include ':app', ':main', ':thongbao'
 rootProject.name='MyPtit'

@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.net.LoginDocumentGetter;
+import com.khoa.myptit.baseNet.LoginDocumentGetter;
 import com.khoa.myptit.util.ParseRespone;
 
 public class LoginViewModel extends ViewModel {

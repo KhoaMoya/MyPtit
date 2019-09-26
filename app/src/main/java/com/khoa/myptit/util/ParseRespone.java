@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.khoa.myptit.baseModel.User;
 import com.khoa.myptit.baseRepository.BaseRepository;
-import com.khoa.myptit.net.Downloader;
+import com.khoa.myptit.baseNet.Downloader;
 
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;

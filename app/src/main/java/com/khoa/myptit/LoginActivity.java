@@ -19,18 +19,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.khoa.main_activity.MainActivity;
 import com.khoa.myptit.baseViewModel.LoginViewModel;
 import com.khoa.myptit.databinding.ActivityLoginBinding;
-import com.khoa.myptit.net.LoginDocumentGetter;
+import com.khoa.myptit.baseNet.LoginDocumentGetter;
+import com.khoa.myptit.main.MainActivity;
 import com.khoa.myptit.util.Permission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 
+
 /*
- * Created at 9/24/19 7:57 PM by Khoa
+ * Created at 9/26/19 3:07 PM by Khoa
  */
 
 public class LoginActivity extends AppCompatActivity {

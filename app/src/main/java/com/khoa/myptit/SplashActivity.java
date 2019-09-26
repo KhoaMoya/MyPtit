@@ -7,22 +7,20 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.khoa.main_activity.MainActivity;
 import com.khoa.myptit.baseModel.User;
 import com.khoa.myptit.baseRepository.BaseRepository;
-import com.khoa.myptit.net.DocumentGetter;
-import com.khoa.myptit.net.url.URL;
+import com.khoa.myptit.baseNet.DocumentGetter;
+import com.khoa.myptit.main.MainActivity;
 import com.khoa.myptit.util.ParseRespone;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 /*
- * Created at 9/24/19 8:35 PM by Khoa
+ * Created at 9/26/19 3:07 PM by Khoa
  */
 
 public class SplashActivity extends AppCompatActivity {

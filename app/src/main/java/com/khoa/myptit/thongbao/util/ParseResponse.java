@@ -6,6 +6,7 @@ package com.khoa.myptit.thongbao.util;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.khoa.myptit.baseNet.DocumentGetter;
 import com.khoa.myptit.baseRepository.BaseRepository;
@@ -17,57 +18,60 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ParseResponse {
 
-    public static ArrayList<ThongBao> parseDocument(Context mContext, DocumentGetter documentGetter){
+    public static ArrayList<ThongBao> parseDocument(Context mContext, DocumentGetter documentGetter) {
 
         ArrayList<ThongBao> listThongBao = new ArrayList<>();
 
-//        if(!documentGetter.getError().equals("")) {
-            try {
-                Document document = documentGetter.getResponse().parse();
-                Element elementBody = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin]").first();
-                Elements mThongBaos = elementBody.select("a[href]");
-                for (Element eThongBao : mThongBaos) {
-                    String link = eThongBao.attr("abs:href");
-                    Log.e("Loi", "link: " + link);
-
-                    String content = eThongBao.text();
-                    Log.e("Loi", "content: " + content);
-
-                    if (content.length() > 0) {
-                        String time = content.substring(content.length() - 12, content.length());
-                        time = time.trim();
-                        time = time.replace("(", "");
-                        time = time.replace(")", "");
-                        Log.e("Loi", "time: " + time);
-
-                        String title = content.substring(0, content.length() - 13);
-                        title = title.trim();
-                        title = title.replace("...", "");
-                        Log.e("Loi", "title: " + title);
-
-//                        String detail = getDetail(link);
-
-                        ThongBao thongBao = new ThongBao(title, "", time, link);
-                        listThongBao.add(thongBao);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//        } else {
-//            Log.e("Loi", "Loi jsoup thong bao: " + documentGetter.getError());
-//        }
-
-        new BaseRepository<ArrayList<ThongBao>>().write(mContext, ThongBao.mFileName, listThongBao);
+        if(!documentGetter.getError().isEmpty()) {
+            Toast.makeText(mContext, "Error parse document: " + documentGetter.getError(), Toast.LENGTH_SHORT).show();
             return listThongBao;
+        }
+
+        try {
+//        Document document = Jsoup.parse(documentGetter.getResponse().body());
+            Document document = documentGetter.getResponse().parse();
+            Element elementBody = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin]").first();
+            if (elementBody == null) return listThongBao;
+
+            Elements mThongBaos = elementBody.select("a[href]");
+            if (mThongBaos == null) return listThongBao;
+
+            for (Element eThongBao : mThongBaos) {
+                String link = eThongBao.absUrl("href");
+                link = link.trim();
+                Log.e("Loi", "link: " + link);
+
+                String content = eThongBao.text();
+                Log.e("Loi", "content: " + content);
+
+                if (content.length() > 0) {
+                    String time = content.substring(content.length() - 12, content.length());
+                    time = time.trim();
+                    time = time.replace("(", "");
+                    time = time.replace(")", "");
+                    Log.e("Loi", "time: " + time);
+
+                    String title = content.substring(0, content.length() - 13);
+                    title = title.trim();
+                    title = title.replace("...", "");
+                    Log.e("Loi", "title: " + title);
+
+                    ThongBao thongBao = new ThongBao(title, "", time, link);
+                    listThongBao.add(thongBao);
+                }
+            }
+        }catch (Exception e){
+            Log.e("Loi", "Loi parse document: " + e.getMessage());
+        }
+        new BaseRepository<ArrayList<ThongBao>>().write(mContext, ThongBao.mFileName, listThongBao);
+        return listThongBao;
     }
 
-    public static String getDetail(final String link){
+    public static String getDetail(final String link) {
         String content = "";
         new Thread(new Runnable() {
             @Override
@@ -79,10 +83,10 @@ public class ParseResponse {
                             .execute();
 
                     Document document = response.parse();
-                    Element body = document.selectFirst("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin");
+                    Element body = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin").first();
                     Log.e("Loi", body.text());
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.e("Loi", e.getMessage());
                 }
             }

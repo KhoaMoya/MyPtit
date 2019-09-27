@@ -22,7 +22,6 @@ import com.khoa.myptit.baseNet.url.URL;
 import com.khoa.myptit.baseRepository.BaseRepository;
 import com.khoa.myptit.databinding.FragmentThongbaoBinding;
 import com.khoa.myptit.thongbao.model.ThongBao;
-import com.khoa.myptit.thongbao.util.ParseResponse;
 import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,27 +44,16 @@ public class ThongBaoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         mFragmentThongbaoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_thongbao, container, false);
-        mThongBaoViewModel = ViewModelProviders.of(this).get(ThongBaoViewModel.class);
-        mThongBaoViewModel.init();
-        mFragmentThongbaoBinding.setViewmodel(mThongBaoViewModel);
 
-        mFragmentThongbaoBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                User user = new BaseRepository<User>().read(getContext(), User.mFileName);
-                DocumentGetter documentGetter = new DocumentGetter(URL.URL_THONG_BAO, user);
-                documentGetter.start();
-            }
-        });
+        setupBindings();
 
-        mThongBaoViewModel.mListThongBao.observe(this, new Observer<ArrayList<ThongBao>>() {
-            @Override
-            public void onChanged(ArrayList<ThongBao> thongBaos) {
-                mThongBaoViewModel.mAdapter.notifyDataSetChanged();
-                mFragmentThongbaoBinding.swipeRefresh.setRefreshing(false);
-            }
-        });
+        setupRefreshListener();
+
+        setupListThongBaoChangeListener();
+
+        loadFirst();
 
         return mFragmentThongbaoBinding.getRoot();
     }
@@ -77,9 +65,39 @@ public class ThongBaoFragment extends Fragment {
         return mThongBaoFragment;
     }
 
+    public void loadFirst(){
+        mThongBaoViewModel.loadListFromFile();
+    }
+
+    public void setupListThongBaoChangeListener(){
+        mThongBaoViewModel.mListThongBao.observe(this, new Observer<ArrayList<ThongBao>>() {
+            @Override
+            public void onChanged(ArrayList<ThongBao> thongBaos) {
+                mThongBaoViewModel.mAdapter.notifyDataSetChanged();
+                mFragmentThongbaoBinding.swipeRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    public void setupRefreshListener(){
+        mFragmentThongbaoBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+               mThongBaoViewModel.refreshListThongBao();
+            }
+        });
+    }
+
+    public void setupBindings(){
+        mThongBaoViewModel = ViewModelProviders.of(this).get(ThongBaoViewModel.class);
+        mThongBaoViewModel.init(getContext());
+        mFragmentThongbaoBinding.setViewmodel(mThongBaoViewModel);
+        mFragmentThongbaoBinding.appbarLayout.setElevation(0);
+    }
+
     @Subscribe
     public void onEventDownloadDocumentDone(DocumentGetter documentGetter){
-        mThongBaoViewModel.loadListThongBao(getContext(), documentGetter);
+        mThongBaoViewModel.loadListThongBao(documentGetter);
     }
 
     @Override

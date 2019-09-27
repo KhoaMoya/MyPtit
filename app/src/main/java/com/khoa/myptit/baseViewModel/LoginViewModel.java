@@ -5,12 +5,14 @@ package com.khoa.myptit.baseViewModel;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.khoa.myptit.baseModel.User;
 import com.khoa.myptit.baseNet.LoginDocumentGetter;
+import com.khoa.myptit.baseRepository.BaseRepository;
 import com.khoa.myptit.util.ParseRespone;
 
 public class LoginViewModel extends ViewModel {
@@ -28,6 +30,7 @@ public class LoginViewModel extends ViewModel {
         mContext = context;
         mShowPassword = new MutableLiveData<>(true);
         mLoginStatus = new MutableLiveData<>();
+        mUser = new BaseRepository<User>().read(mContext, User.mFileName);
     }
 
     public void onClickShowPassword() {
@@ -35,7 +38,6 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void downloadDocumentLogin(String maSV, String password) {
-
         mUser = new User();
         mUser.setMaSV(maSV);
         mUser.setMaKhau(password);
@@ -43,6 +45,10 @@ public class LoginViewModel extends ViewModel {
         mLoginStatus.setValue(LoginStatus.LOGINNING);
         LoginDocumentGetter mLoginDocumentGetter = new LoginDocumentGetter(mUser);
         mLoginDocumentGetter.start();
+    }
+
+    public String getMaSV(){
+        return mUser.getMaSV()==null ? "" : mUser.getMaSV();
     }
 
     public void checkLogin(LoginDocumentGetter loginDocumentGetter) {

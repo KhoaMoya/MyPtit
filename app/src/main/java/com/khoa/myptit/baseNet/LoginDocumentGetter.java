@@ -34,6 +34,7 @@ public class LoginDocumentGetter extends Downloader{
                     .method(Connection.Method.POST)
                     .timeout(10000)
                     .execute();
+
         } catch (Exception e){
             mError = e.getMessage();
             Log.e("Loi", "LoginDocumentGetter: " + e.getMessage());

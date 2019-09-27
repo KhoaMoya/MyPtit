@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.khoa.myptit.thongbao.adapter.ThongBaoRecycleViewAdapter;
+import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;
 
 public class AdapterBinding {
 
@@ -19,9 +20,10 @@ public class AdapterBinding {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         recyclerView.setAdapter(adapter);
     }
-    @BindingAdapter("setContent")
-    public static void setContent(TextView textView, int position){
 
+    @BindingAdapter({"setPosition", "setViewModel"})
+    public static void setContent(TextView textView, int position, ThongBaoViewModel viewModel){
+        textView.setText(viewModel.getListThongBao().get(position).getLink());
     }
 
 }

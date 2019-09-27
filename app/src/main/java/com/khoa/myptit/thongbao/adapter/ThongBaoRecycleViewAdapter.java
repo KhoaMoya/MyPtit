@@ -5,7 +5,6 @@ package com.khoa.myptit.thongbao.adapter;
  */
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -30,7 +29,6 @@ public class ThongBaoRecycleViewAdapter extends RecyclerView.Adapter<ThongBaoRec
     public ThongBaoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.item_thongbao, parent, false);
-
         return new ThongBaoViewHolder(binding);
     }
 
@@ -47,7 +45,7 @@ public class ThongBaoRecycleViewAdapter extends RecyclerView.Adapter<ThongBaoRec
     class ThongBaoViewHolder extends RecyclerView.ViewHolder {
         final ViewDataBinding binding;
 
-        public ThongBaoViewHolder(ViewDataBinding viewDataBinding) {
+        ThongBaoViewHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             this.binding = viewDataBinding;
         }

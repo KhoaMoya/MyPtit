@@ -60,6 +60,7 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/background_white_conner"
             android:hint="Mã sinh viên"
+            android:text="@{loginViewModel.getMaSV()}"
             android:inputType="textAutoComplete"
             android:maxLines="1"
             android:paddingStart="20dp"

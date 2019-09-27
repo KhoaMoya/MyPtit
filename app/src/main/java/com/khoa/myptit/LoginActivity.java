@@ -86,19 +86,20 @@ public class LoginActivity extends AppCompatActivity {
     public void setupLoginClick(){
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage("Đang đăng nhập");
         mLoginViewModel.mLoginStatus.observe(this, new Observer<LoginViewModel.LoginStatus>() {
             @Override
             public void onChanged(LoginViewModel.LoginStatus loginStatus) {
                 if(loginStatus == LoginViewModel.LoginStatus.LOGINNING){
                     mProgressDialog.show();
                 } else if(loginStatus == LoginViewModel.LoginStatus.SUCCESS) {
-                    mProgressDialog.hide();
+                    mProgressDialog.dismiss();
                     Log.e("Loi", "Login success");
                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(mainIntent);
                     finish();
                 } else {
-                    mProgressDialog.hide();
+                    mProgressDialog.dismiss();
                     Log.e("Loi", "Login fail");
                     Toast.makeText(getBaseContext(), "Login fail", Toast.LENGTH_SHORT).show();
                 }

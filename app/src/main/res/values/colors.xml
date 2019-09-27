@@ -8,6 +8,7 @@
     <color name="colorWhite25">#40BFBFBF</color>
     <color name="colorWhite50">#80BFBFBF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorBlack5">#0D000000</color>
     <color name="colorBlack25">#40000000</color>
     <color name="colorBlack50">#80000000</color>
     <color name="colorBlack75">#BF000000</color>

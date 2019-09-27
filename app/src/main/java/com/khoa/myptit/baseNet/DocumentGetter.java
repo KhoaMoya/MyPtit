@@ -25,7 +25,6 @@ public class DocumentGetter extends Downloader {
             mResponse = Jsoup.connect(mURL)
                     .cookie("ASP.NET_SessionId", mUser.getCookie())
                     .method(Connection.Method.GET)
-                    .timeout(10000)
                     .execute();
 
         } catch (Exception e){

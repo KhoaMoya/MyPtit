@@ -1,4 +1,4 @@
-package com.khoa.myptit;
+package com.khoa.myptit.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -19,11 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.khoa.myptit.baseViewModel.LoginViewModel;
+import com.khoa.myptit.R;
+import com.khoa.myptit.login.viewmodel.LoginViewModel;
 import com.khoa.myptit.databinding.ActivityLoginBinding;
-import com.khoa.myptit.baseNet.LoginDocumentGetter;
+import com.khoa.myptit.login.net.LoginDocumentGetter;
 import com.khoa.myptit.main.MainActivity;
-import com.khoa.myptit.util.Permission;
+import com.khoa.myptit.login.util.Permission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 /*
  * Created at 9/26/19 3:07 PM by Khoa
  */
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -145,14 +147,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case Permission.PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("Loi", "Permission Granted, Now you can use local drive .");
-                } else {
-                    Log.e("Loi", "Permission Denied, You cannot use local drive .");
-                }
-                break;
+        if (requestCode == Permission.PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.e("Loi", "Permission Granted, Now you can use local drive .");
+            } else {
+                Log.e("Loi", "Permission Denied, You cannot use local drive .");
+            }
         }
     }
 

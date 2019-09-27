@@ -1,30 +1,30 @@
-package com.khoa.myptit.baseViewModel;
+package com.khoa.myptit.login.viewmodel;
 
-/*
- * Created at 9/23/19 12:15 PM by Khoa
- */
+
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseNet.LoginDocumentGetter;
-import com.khoa.myptit.baseRepository.BaseRepository;
-import com.khoa.myptit.util.ParseRespone;
+import com.khoa.myptit.login.model.User;
+import com.khoa.myptit.login.net.LoginDocumentGetter;
+import com.khoa.myptit.login.repository.BaseRepository;
+import com.khoa.myptit.login.util.ParseRespone;
 
+/*
+ * Created at 9/23/19 12:15 PM by Khoa
+ */
 public class LoginViewModel extends ViewModel {
 
     public enum LoginStatus {
         LOGINNING, FAIL, SUCCESS
     }
 
-    public Context mContext;
+    private Context mContext;
     public MutableLiveData<Boolean> mShowPassword;
     public MutableLiveData<LoginStatus> mLoginStatus;
-    public User mUser;
+    private User mUser;
 
     public void init(Context context) {
         mContext = context;

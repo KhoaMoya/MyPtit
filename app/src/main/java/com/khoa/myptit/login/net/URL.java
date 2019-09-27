@@ -1,4 +1,4 @@
-package com.khoa.myptit.baseNet.url;
+package com.khoa.myptit.login.net;
 
 /*
  * Created at 9/24/19 2:21 PM by Khoa

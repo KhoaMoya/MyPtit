@@ -10,11 +10,12 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseRepository.BaseRepository;
-import com.khoa.myptit.baseNet.DocumentGetter;
+import com.khoa.myptit.login.LoginActivity;
+import com.khoa.myptit.login.model.User;
+import com.khoa.myptit.login.repository.BaseRepository;
+import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.main.MainActivity;
-import com.khoa.myptit.util.ParseRespone;
+import com.khoa.myptit.login.util.ParseRespone;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

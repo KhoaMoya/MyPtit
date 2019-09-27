@@ -1,4 +1,4 @@
-package com.khoa.myptit.util;
+package com.khoa.myptit.login.util;
 
 /*
  * Created at 9/24/19 2:42 PM by Khoa

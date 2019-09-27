@@ -1,6 +1,6 @@
-package com.khoa.myptit.baseNet;
+package com.khoa.myptit.login.net;
 
-import com.khoa.myptit.baseModel.User;
+import com.khoa.myptit.login.model.User;
 
 import org.jsoup.Connection;
 
@@ -8,14 +8,15 @@ import org.jsoup.Connection;
  * Created at 9/24/19 2:09 PM by Khoa
  */
 
+
 public abstract class Downloader extends Thread {
 
-    protected String mURL;
-    protected Connection.Response mResponse;
-    protected String mError;
-    protected User mUser;
+    String mURL;
+    Connection.Response mResponse;
+    String mError;
+    User mUser;
 
-    public Downloader(String mURL, User mUser) {
+    Downloader(String mURL, User mUser) {
         this.mURL = mURL;
         this.mUser = mUser;
         this.mError = "";

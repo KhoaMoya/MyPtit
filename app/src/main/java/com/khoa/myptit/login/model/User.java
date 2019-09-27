@@ -1,4 +1,4 @@
-package com.khoa.myptit.baseModel;
+package com.khoa.myptit.login.model;
 
 import java.io.Serializable;
 
@@ -6,7 +6,6 @@ import java.io.Serializable;
 /*
  * Created at 9/22/19 3:00 PM by Khoa
  */
-
 public class User implements Serializable {
 
 

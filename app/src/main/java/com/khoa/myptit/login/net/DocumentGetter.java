@@ -1,16 +1,18 @@
-package com.khoa.myptit.baseNet;
+package com.khoa.myptit.login.net;
 
-/*
- * Created at 9/24/19 1:51 PM by Khoa
- */
+
 
 import android.util.Log;
 
-import com.khoa.myptit.baseModel.User;
+import com.khoa.myptit.login.model.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+
+/*
+ * Created at 9/24/19 1:51 PM by Khoa
+ */
 
 public class DocumentGetter extends Downloader {
 

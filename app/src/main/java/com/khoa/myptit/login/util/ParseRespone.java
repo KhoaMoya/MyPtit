@@ -1,4 +1,4 @@
-package com.khoa.myptit.util;
+package com.khoa.myptit.login.util;
 
 /*
  * Created at 9/25/19 11:07 AM by Khoa
@@ -8,9 +8,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseNet.Downloader;
-import com.khoa.myptit.baseRepository.BaseRepository;
+import com.khoa.myptit.login.model.User;
+import com.khoa.myptit.login.net.Downloader;
+import com.khoa.myptit.login.repository.BaseRepository;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -31,18 +31,16 @@ public class ParseRespone {
                 Element mElementUserName = mDocument.select("span[id=\"ctl00_Header1_ucLogout_lblNguoiDung\"]").first();
 
                 Log.e("Loi", "Nguoi dung: " + mElementUserName.text());
-                if (mElementUserName != null) {
-                    if (!mElementUserName.text().equals("")) {
-                        Map<String, String> loginCookies = mResponse.cookies();
-                        String mCookie = loginCookies.get(User.mKeyCookie);
+                if (!mElementUserName.text().equals("")) {
+                    Map<String, String> loginCookies = mResponse.cookies();
+                    String mCookie = loginCookies.get(User.mKeyCookie);
 
-                        if (mCookie != null) {
-                            User mUser = downloader.getUser();
-                            mUser.setCookie(mCookie);
-                            new BaseRepository<User>().write(mContext, User.mFileName, mUser);
-                        }
-                        return true;
+                    if (mCookie != null) {
+                        User mUser = downloader.getUser();
+                        mUser.setCookie(mCookie);
+                        new BaseRepository<User>().write(mContext, User.mFileName, mUser);
                     }
+                    return true;
                 }
             }
             return false;

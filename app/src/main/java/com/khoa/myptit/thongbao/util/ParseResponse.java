@@ -8,8 +8,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.khoa.myptit.baseNet.DocumentGetter;
-import com.khoa.myptit.baseRepository.BaseRepository;
+import com.khoa.myptit.login.net.DocumentGetter;
+import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.model.ThongBao;
 
 import org.jsoup.Connection;
@@ -18,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ParseResponse {
@@ -49,7 +50,7 @@ public class ParseResponse {
                 Log.e("Loi", "content: " + content);
 
                 if (content.length() > 0) {
-                    String time = content.substring(content.length() - 12, content.length());
+                    String time = content.substring(content.length() - 12);
                     time = time.trim();
                     time = time.replace("(", "");
                     time = time.replace(")", "");
@@ -86,7 +87,7 @@ public class ParseResponse {
                     Element body = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin").first();
                     Log.e("Loi", body.text());
 
-                } catch (Exception e) {
+                } catch (IOException e) {
                     Log.e("Loi", e.getMessage());
                 }
             }

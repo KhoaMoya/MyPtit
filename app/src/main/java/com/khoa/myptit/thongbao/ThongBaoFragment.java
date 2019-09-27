@@ -1,7 +1,6 @@
 package com.khoa.myptit.thongbao;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.khoa.myptit.R;
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseNet.DocumentGetter;
-import com.khoa.myptit.baseNet.url.URL;
-import com.khoa.myptit.baseRepository.BaseRepository;
+import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.databinding.FragmentThongbaoBinding;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;

@@ -1,4 +1,4 @@
-package com.khoa.myptit.baseNet;
+package com.khoa.myptit.login.net;
 
 /*
  * Created at 9/23/19 2:05 PM by Khoa
@@ -6,14 +6,14 @@ package com.khoa.myptit.baseNet;
 
 import android.util.Log;
 
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseNet.url.URL;
+import com.khoa.myptit.login.model.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-public class LoginDocumentGetter extends Downloader{
+
+public class LoginDocumentGetter extends Downloader {
 
 
     public LoginDocumentGetter(User mUser) {

@@ -5,15 +5,14 @@ package com.khoa.myptit.thongbao.viewmodel;
  */
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.khoa.myptit.baseModel.User;
-import com.khoa.myptit.baseNet.DocumentGetter;
-import com.khoa.myptit.baseNet.url.URL;
-import com.khoa.myptit.baseRepository.BaseRepository;
+import com.khoa.myptit.login.model.User;
+import com.khoa.myptit.login.net.DocumentGetter;
+import com.khoa.myptit.login.net.URL;
+import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.adapter.ThongBaoRecycleViewAdapter;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.util.ParseResponse;
@@ -24,8 +23,8 @@ public class ThongBaoViewModel extends ViewModel {
 
     public MutableLiveData<ArrayList<ThongBao>> mListThongBao;
     public ThongBaoRecycleViewAdapter mAdapter;
-    public User mUser;
-    public Context mContext;
+    private User mUser;
+    private Context mContext;
 
     public void init(Context context){
         mContext = context;

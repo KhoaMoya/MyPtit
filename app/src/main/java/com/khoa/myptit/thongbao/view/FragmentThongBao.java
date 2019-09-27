@@ -1,4 +1,4 @@
-package com.khoa.myptit.thongbao;
+package com.khoa.myptit.thongbao.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,10 +29,11 @@ import java.util.ArrayList;
  * Created at 9/26/19 3:11 PM by Khoa
  */
 
-public class ThongBaoFragment extends Fragment {
+
+public class FragmentThongBao extends Fragment {
 
     private ThongBaoViewModel mThongBaoViewModel;
-    private static ThongBaoFragment mThongBaoFragment;
+    private static FragmentThongBao mFragmentThongBao;
     private FragmentThongbaoBinding mFragmentThongbaoBinding;
 
 
@@ -54,11 +55,11 @@ public class ThongBaoFragment extends Fragment {
         return mFragmentThongbaoBinding.getRoot();
     }
 
-    public static ThongBaoFragment getInstance(){
-        if(mThongBaoFragment ==null){
-            mThongBaoFragment = new ThongBaoFragment();
+    public static FragmentThongBao getInstance(){
+        if(mFragmentThongBao ==null){
+            mFragmentThongBao = new FragmentThongBao();
         }
-        return mThongBaoFragment;
+        return mFragmentThongBao;
     }
 
     public void loadFirst(){

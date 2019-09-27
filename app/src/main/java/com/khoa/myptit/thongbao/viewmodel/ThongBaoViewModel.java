@@ -16,6 +16,7 @@ import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.adapter.ThongBaoRecycleViewAdapter;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.util.ParseResponse;
+import com.khoa.myptit.thongbao.view.DialogChiTietThongBao;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,10 @@ public class ThongBaoViewModel extends ViewModel {
         ArrayList<ThongBao> list = new BaseRepository<ArrayList<ThongBao>>().read(mContext, ThongBao.mFileName);
         if(list!=null) mListThongBao.setValue(list);
         else refreshListThongBao();
+    }
+
+    public void onClickItem(int position){
+        new DialogChiTietThongBao(mListThongBao.getValue().get(position), mContext).show();
     }
 
     public void refreshListThongBao(){

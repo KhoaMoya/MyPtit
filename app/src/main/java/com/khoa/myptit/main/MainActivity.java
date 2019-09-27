@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.ActivityMainBinding;
 import com.khoa.myptit.main.viewmodel.MainViewModel;
-import com.khoa.myptit.thongbao.ThongBaoFragment;
+import com.khoa.myptit.thongbao.view.FragmentThongBao;
 
 /*
  * Created at 9/26/19 3:07 PM by Khoa
@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         setupBindings(savedInstanceState);
 
-        ThongBaoFragment thongBaoFragment = ThongBaoFragment.getInstance();
+        FragmentThongBao fragmentThongBao = FragmentThongBao.getInstance();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frame_layout, thongBaoFragment)
+                .replace(R.id.frame_layout, fragmentThongBao)
                 .commit();
     }
 

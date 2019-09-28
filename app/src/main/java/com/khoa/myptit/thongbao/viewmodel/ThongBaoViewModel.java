@@ -4,8 +4,6 @@ package com.khoa.myptit.thongbao.viewmodel;
  * Created at 9/26/19 3:11 PM by Khoa
  */
 
-import android.content.Context;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,7 +14,7 @@ import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.adapter.ThongBaoRecycleViewAdapter;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.util.ParseResponse;
-import com.khoa.myptit.thongbao.view.DialogChiTietThongBao;
+import com.khoa.myptit.thongbao.view.FragmentThongBao;
 
 import java.util.ArrayList;
 
@@ -25,28 +23,29 @@ public class ThongBaoViewModel extends ViewModel {
     public MutableLiveData<ArrayList<ThongBao>> mListThongBao;
     public ThongBaoRecycleViewAdapter mAdapter;
     private User mUser;
-    private Context mContext;
+    private FragmentThongBao mFragmentThongBao;
 
-    public void init(Context context){
-        mContext = context;
+    public void init(FragmentThongBao fragmentThongBao){
+        mFragmentThongBao = fragmentThongBao;
         mListThongBao = new MutableLiveData<>(new ArrayList<ThongBao>());
         mAdapter = new ThongBaoRecycleViewAdapter(this);
-        mUser = new BaseRepository<User>().read(mContext, User.mFileName);
+        mUser = new BaseRepository<User>().read(mFragmentThongBao.getContext(), User.mFileName);
     }
 
     public void loadListThongBao(DocumentGetter documentGetter){
-        ArrayList<ThongBao> thongBaos = ParseResponse.parseDocument(mContext, documentGetter);
+        ArrayList<ThongBao> thongBaos = ParseResponse.parseDocument(mFragmentThongBao.getContext(), documentGetter);
         mListThongBao.postValue(thongBaos);
     }
 
     public void loadListFromFile(){
-        ArrayList<ThongBao> list = new BaseRepository<ArrayList<ThongBao>>().read(mContext, ThongBao.mFileName);
+        ArrayList<ThongBao> list = new BaseRepository<ArrayList<ThongBao>>().read(mFragmentThongBao.getContext(), ThongBao.mFileName);
         if(list!=null) mListThongBao.setValue(list);
         else refreshListThongBao();
     }
 
-    public void onClickItem(int position){
-        new DialogChiTietThongBao(mListThongBao.getValue().get(position), mContext).show();
+
+    public FragmentThongBao getFragment(){
+        return mFragmentThongBao;
     }
 
     public void refreshListThongBao(){

@@ -12,13 +12,11 @@ import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.model.ThongBao;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ParseResponse {
@@ -72,26 +70,17 @@ public class ParseResponse {
         return listThongBao;
     }
 
-    public static String getDetail(final String link) {
+    public static String getDetail(Context mContext, DocumentGetter documentGetter) {
         String content = "";
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Connection.Response response = Jsoup.connect(link)
-                            .method(Connection.Method.GET)
-                            .timeout(10000)
-                            .execute();
 
-                    Document document = response.parse();
-                    Element body = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin").first();
-                    Log.e("Loi", body.text());
+        Document document = Jsoup.parse(documentGetter.getResponse().body());
 
-                } catch (IOException e) {
-                    Log.e("Loi", e.getMessage());
-                }
-            }
-        }).start();
+        Elements elements = document.select("td[class=TextThongTin]");
+        Element contain = elements.get(1);
+        Elements items = contain.select("p");
+        for(Element e : items ){
+            content = content + "\n" + e.text();
+        }
         return content;
     }
 }

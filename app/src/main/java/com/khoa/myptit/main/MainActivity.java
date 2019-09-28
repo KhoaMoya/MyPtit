@@ -40,6 +40,5 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState == null){
             mMainViewModel = new MainViewModel();
         }
-
     }
 }

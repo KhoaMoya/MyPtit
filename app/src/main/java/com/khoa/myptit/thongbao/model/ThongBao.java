@@ -6,7 +6,7 @@ package com.khoa.myptit.thongbao.model;
 
 import java.io.Serializable;
 
-public class ThongBao implements Serializable {
+public class ThongBao implements Serializable{
 
     public static String mFileName = "thongbao.data";
     private String mTitle;
@@ -23,6 +23,7 @@ public class ThongBao implements Serializable {
         this.mTime = mTime;
         this.mLink = mLink;
     }
+
 
     public String getTitle() {
         return mTitle;

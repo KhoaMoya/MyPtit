@@ -17,13 +17,14 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:transitionName="contain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorWhite"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="@{()->viewmodel.onClickItem(position)}"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
 
@@ -37,6 +38,7 @@
 
             <TextView
                 android:id="@+id/txt_title"
+                android:transitionName="title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -45,7 +47,7 @@
                 android:gravity="start"
                 android:text="@{viewmodel.getTitleAt(position)}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/colorBlack75"
+                android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +55,7 @@
 
             <TextView
                 android:id="@+id/txt_time"
+                android:transitionName="time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -65,13 +68,14 @@
 
             <TextView
                 android:id="@+id/txt_content"
+                android:transitionName="content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:setPosition="@{position}"
                 app:setViewModel="@{viewmodel}"
                 android:textSize="13sp"
-                android:textColor="@color/colorBlack50"
+                android:textColor="@color/colorBlack75"
                 app:layout_constraintEnd_toEndOf="@id/txt_title"
                 app:layout_constraintStart_toStartOf="@+id/txt_title"
                 app:layout_constraintTop_toBottomOf="@+id/txt_time" />

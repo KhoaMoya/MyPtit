@@ -5,55 +5,74 @@ package com.khoa.myptit.thongbao.adapter;
  */
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.khoa.myptit.BR;
 import com.khoa.myptit.R;
+import com.khoa.myptit.databinding.ItemThongbaoBinding;
 import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;
 
 public class ThongBaoRecycleViewAdapter extends RecyclerView.Adapter<ThongBaoRecycleViewAdapter.ThongBaoViewHolder> {
 
-    private ThongBaoViewModel viewModel;
+    private ThongBaoViewModel mViewModel;
+    private ItemThongbaoBinding mItemThongBaoBinding;
+    private ItemClickListener mListener;
+
 
     public ThongBaoRecycleViewAdapter(ThongBaoViewModel viewModel) {
-        this.viewModel = viewModel;
+        this.mViewModel = viewModel;
+        this.mListener = mViewModel.getFragment();
     }
 
     @NonNull
     @Override
     public ThongBaoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.item_thongbao, parent, false);
-        return new ThongBaoViewHolder(binding);
+        mItemThongBaoBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_thongbao, parent, false);
+        return new ThongBaoViewHolder(mItemThongBaoBinding);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ThongBaoViewHolder holder, int position) {
-        holder.bind(viewModel, position);
+    public void onBindViewHolder(@NonNull final ThongBaoViewHolder holder, final int position) {
+        holder.itemThongbaoBinding.setViewmodel(mViewModel);
+        holder.itemThongbaoBinding.setPosition(position);
+
+//        Pair<View, String> contain = Pair.create((View) holder.itemThongbaoBinding.cardview, "contain");
+//        Pair<View, String> title = Pair.create((View) holder.itemThongbaoBinding.txtTitle, "title");
+//        Pair<View, String> time = Pair.create((View) holder.itemThongbaoBinding.cardview, "time");
+//        Pair<View, String> content = Pair.create((View) holder.itemThongbaoBinding.cardview, "content");
+//        final ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mViewModel.getFragment().getActivity(), contain, title, time, content);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onClickItem(position);
+            }
+        });
+        holder.itemThongbaoBinding.executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return viewModel.getListThongBao().size();
+        return mViewModel.getListThongBao().size();
     }
 
     class ThongBaoViewHolder extends RecyclerView.ViewHolder {
-        final ViewDataBinding binding;
+        ItemThongbaoBinding itemThongbaoBinding;
 
-        ThongBaoViewHolder(ViewDataBinding viewDataBinding) {
-            super(viewDataBinding.getRoot());
-            this.binding = viewDataBinding;
-        }
-
-        void bind(ThongBaoViewModel viewModel, Integer position) {
-            binding.setVariable(BR.viewmodel, viewModel);
-            binding.setVariable(BR.position, position);
-            binding.executePendingBindings();
+        ThongBaoViewHolder(ItemThongbaoBinding binding) {
+            super(binding.getRoot());
+            this.itemThongbaoBinding = binding;
         }
     }
 }

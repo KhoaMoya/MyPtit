@@ -1,6 +1,10 @@
 package com.khoa.myptit.thongbao.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.khoa.myptit.R;
 import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.databinding.FragmentThongbaoBinding;
+import com.khoa.myptit.thongbao.adapter.ItemClickListener;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;
 
@@ -30,12 +37,13 @@ import java.util.ArrayList;
  */
 
 
-public class FragmentThongBao extends Fragment {
+public class FragmentThongBao extends Fragment implements ItemClickListener {
 
     private ThongBaoViewModel mThongBaoViewModel;
     private static FragmentThongBao mFragmentThongBao;
     private FragmentThongbaoBinding mFragmentThongbaoBinding;
 
+    static String KEY_ITEM = "keyItem";
 
 
     @Nullable
@@ -62,11 +70,11 @@ public class FragmentThongBao extends Fragment {
         return mFragmentThongBao;
     }
 
-    public void loadFirst(){
+    private void loadFirst(){
         mThongBaoViewModel.loadListFromFile();
     }
 
-    public void setupListThongBaoChangeListener(){
+    private void setupListThongBaoChangeListener(){
         mThongBaoViewModel.mListThongBao.observe(this, new Observer<ArrayList<ThongBao>>() {
             @Override
             public void onChanged(ArrayList<ThongBao> thongBaos) {
@@ -76,7 +84,7 @@ public class FragmentThongBao extends Fragment {
         });
     }
 
-    public void setupRefreshListener(){
+    private void setupRefreshListener(){
         mFragmentThongbaoBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -85,28 +93,38 @@ public class FragmentThongBao extends Fragment {
         });
     }
 
-    public void setupBindings(){
+    private void setupBindings(){
         mThongBaoViewModel = ViewModelProviders.of(this).get(ThongBaoViewModel.class);
-        mThongBaoViewModel.init(getContext());
+        mThongBaoViewModel.init(this);
         mFragmentThongbaoBinding.setViewmodel(mThongBaoViewModel);
         mFragmentThongbaoBinding.appbarLayout.setElevation(0);
     }
 
     @Subscribe
     public void onEventDownloadDocumentDone(DocumentGetter documentGetter){
+        Log.e("Loi", "fragment");
         mThongBaoViewModel.loadListThongBao(documentGetter);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onClickItem(int position) {
+        Intent intent = new Intent(getActivity(), ActivityChiTietThongBao.class);
+        intent.putExtra(KEY_ITEM, mThongBaoViewModel.getListThongBao().get(position));
+        startActivity(intent);
+        onStop();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
         EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
 }

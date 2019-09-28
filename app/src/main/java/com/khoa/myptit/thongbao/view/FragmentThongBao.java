@@ -13,15 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.khoa.myptit.R;
-import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.databinding.FragmentThongbaoBinding;
 import com.khoa.myptit.thongbao.adapter.ItemClickListener;
 import com.khoa.myptit.thongbao.model.ThongBao;
@@ -71,6 +68,7 @@ public class FragmentThongBao extends Fragment implements ItemClickListener {
     }
 
     private void loadFirst(){
+        mFragmentThongbaoBinding.swipeRefresh.setRefreshing(true);
         mThongBaoViewModel.loadListFromFile();
     }
 
@@ -101,9 +99,8 @@ public class FragmentThongBao extends Fragment implements ItemClickListener {
     }
 
     @Subscribe
-    public void onEventDownloadDocumentDone(DocumentGetter documentGetter){
-        Log.e("Loi", "fragment");
-        mThongBaoViewModel.loadListThongBao(documentGetter);
+    public void onEventParseListThongBaoDone(ArrayList<ThongBao> list){
+        mThongBaoViewModel.loadListThongBao(list);
     }
 
     @Override

@@ -13,7 +13,7 @@ import com.khoa.myptit.login.net.URL;
 import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.adapter.ThongBaoRecycleViewAdapter;
 import com.khoa.myptit.thongbao.model.ThongBao;
-import com.khoa.myptit.thongbao.util.ParseResponse;
+import com.khoa.myptit.thongbao.net.ListThongBaoDownloader;
 import com.khoa.myptit.thongbao.view.FragmentThongBao;
 
 import java.util.ArrayList;
@@ -32,9 +32,8 @@ public class ThongBaoViewModel extends ViewModel {
         mUser = new BaseRepository<User>().read(mFragmentThongBao.getContext(), User.mFileName);
     }
 
-    public void loadListThongBao(DocumentGetter documentGetter){
-        ArrayList<ThongBao> thongBaos = ParseResponse.parseDocument(mFragmentThongBao.getContext(), documentGetter);
-        mListThongBao.postValue(thongBaos);
+    public void loadListThongBao(ArrayList<ThongBao> list){
+        mListThongBao.postValue(list);
     }
 
     public void loadListFromFile(){
@@ -49,7 +48,7 @@ public class ThongBaoViewModel extends ViewModel {
     }
 
     public void refreshListThongBao(){
-        new DocumentGetter(URL.URL_THONG_BAO, mUser).start();
+        new ListThongBaoDownloader(mFragmentThongBao.getContext()).start();
     }
 
     public String getMaSinhVien(){

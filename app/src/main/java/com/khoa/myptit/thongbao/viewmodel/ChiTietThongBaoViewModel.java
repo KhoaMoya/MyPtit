@@ -4,16 +4,13 @@ package com.khoa.myptit.thongbao.viewmodel;
  * Created at 9/28/19 5:16 PM by Khoa
  */
 
-import android.content.Context;
 import android.view.View;
 
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.thongbao.model.ThongBao;
-import com.khoa.myptit.thongbao.util.ParseResponse;
 
 public class ChiTietThongBaoViewModel extends ViewModel {
 
@@ -26,7 +23,7 @@ public class ChiTietThongBaoViewModel extends ViewModel {
         mThongBao = thongBao;
         showLoading = new ObservableInt(View.VISIBLE);
         showContent = new ObservableInt(View.GONE);
-        mContent = new MutableLiveData<>("");
+        mContent = new MutableLiveData<>();
     }
 
     public String getTime(){
@@ -41,8 +38,7 @@ public class ChiTietThongBaoViewModel extends ViewModel {
         return mThongBao.getLink();
     }
 
-    public void updateContent(Context context, DocumentGetter documentGetter){
-        String content = ParseResponse.getDetail(context, documentGetter);
+    public void updateContent( String content){
         mContent.postValue(content);
     }
 

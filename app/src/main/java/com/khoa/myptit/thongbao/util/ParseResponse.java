@@ -21,18 +21,11 @@ import java.util.ArrayList;
 
 public class ParseResponse {
 
-    public static ArrayList<ThongBao> parseDocument(Context mContext, DocumentGetter documentGetter) {
+    public static ArrayList<ThongBao> convertToListThongBao(Context mContext, Document document) {
 
         ArrayList<ThongBao> listThongBao = new ArrayList<>();
 
-        if(!documentGetter.getError().isEmpty()) {
-            Toast.makeText(mContext, "Error parse document: " + documentGetter.getError(), Toast.LENGTH_SHORT).show();
-            return listThongBao;
-        }
-
         try {
-//        Document document = Jsoup.parse(documentGetter.getResponse().body());
-            Document document = documentGetter.getResponse().parse();
             Element elementBody = document.select("table[id=ctl00_ContentPlaceHolder1_ctl00_tbThongTin]").first();
             if (elementBody == null) return listThongBao;
 
@@ -64,17 +57,14 @@ public class ParseResponse {
                 }
             }
         }catch (Exception e){
-            Log.e("Loi", "Loi parse document: " + e.getMessage());
+            Log.e("Loi", "Loi parse document list thong bao: " + e.getMessage());
         }
         new BaseRepository<ArrayList<ThongBao>>().write(mContext, ThongBao.mFileName, listThongBao);
         return listThongBao;
     }
 
-    public static String getDetail(Context mContext, DocumentGetter documentGetter) {
+    public static String convertToContent(Document document) {
         String content = "";
-
-        Document document = Jsoup.parse(documentGetter.getResponse().body());
-
         Elements elements = document.select("td[class=TextThongTin]");
         Element contain = elements.get(1);
         Elements items = contain.select("p");

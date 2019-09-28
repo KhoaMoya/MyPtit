@@ -6,19 +6,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.ActivityChiTietThongBaoBinding;
-import com.khoa.myptit.login.model.User;
-import com.khoa.myptit.login.net.DocumentGetter;
-import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.model.ThongBao;
-import com.khoa.myptit.thongbao.util.ParseResponse;
+import com.khoa.myptit.thongbao.net.ContentThongBaoDownloader;
 import com.khoa.myptit.thongbao.viewmodel.ChiTietThongBaoViewModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,7 +50,7 @@ public class ActivityChiTietThongBao extends AppCompatActivity {
 
     public void loadContent(){
         String link = mViewModel.getLink();
-        new DocumentGetter(link, new BaseRepository<User>().read(this, User.mFileName)).start();
+        new ContentThongBaoDownloader(link).start();
     }
 
     public void setupBinding(){
@@ -71,8 +64,8 @@ public class ActivityChiTietThongBao extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onEventDownloadDocumentDone(DocumentGetter documentGetter){
-        mViewModel.updateContent(this, documentGetter);
+    public void onEventParseContentDone(String content){
+        mViewModel.updateContent(content);
     }
 
     @Override

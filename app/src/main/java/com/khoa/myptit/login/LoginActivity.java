@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.khoa.myptit.R;
 import com.khoa.myptit.login.viewmodel.LoginViewModel;
 import com.khoa.myptit.databinding.ActivityLoginBinding;
-import com.khoa.myptit.login.net.LoginDocumentGetter;
+import com.khoa.myptit.login.net.LoginResponseGetter;
 import com.khoa.myptit.main.MainActivity;
 import com.khoa.myptit.login.util.Permission;
 
@@ -137,8 +137,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onEventDownloadDocumentDone(LoginDocumentGetter loginDocumentGetter){
-        mLoginViewModel.checkLogin(loginDocumentGetter);
+    public void onEventDownloadDocumentDone(LoginResponseGetter loginResponseGetter){
+        mLoginViewModel.checkLogin(loginResponseGetter);
     }
 
     public void initPermission(){

@@ -6,13 +6,10 @@ package com.khoa.myptit.thongbao.util;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.khoa.myptit.login.net.DocumentGetter;
 import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.thongbao.model.ThongBao;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

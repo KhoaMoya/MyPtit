@@ -23,6 +23,7 @@ public class User implements Serializable {
     private String khoa;
     private String heDaoTao;
     private String coVanHocTap;
+    private String mViewState;
 
     private static User mInstance;
 
@@ -31,6 +32,14 @@ public class User implements Serializable {
             mInstance = new User();
         }
         return mInstance;
+    }
+
+    public String getViewState() {
+        return mViewState;
+    }
+
+    public void setViewState(String mViewState) {
+        this.mViewState = mViewState;
     }
 
     public String getCookie() {

@@ -7,17 +7,19 @@ package com.khoa.myptit.login.net;
 import android.util.Log;
 
 import com.khoa.myptit.login.model.User;
+import com.khoa.myptit.login.viewmodel.LoginViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 
-public class LoginDocumentGetter extends Downloader {
+public class LoginResponseGetter extends Downloader {
 
+    private final static String mURL = "http://qldt.ptit.edu.vn/default.aspx?page=gioithieu";
 
-    public LoginDocumentGetter(User mUser) {
-        super(URL.URL_LOGIN, mUser);
+    public LoginResponseGetter(User mUser) {
+        super(LoginViewModel.TAG, mURL, mUser);
     }
 
     @Override
@@ -26,18 +28,18 @@ public class LoginDocumentGetter extends Downloader {
            mResponse = Jsoup.connect(mURL)
                     .data("ctl00$ContentPlaceHolder1$ctl00$ucDangNhap$txtMatKhau", mUser.getMaKhau())
                     .data("ctl00$ContentPlaceHolder1$ctl00$ucDangNhap$txtTaiKhoa", mUser.getMaSV())
-                    .data("__EVENTTARGET", "")
                     .data("__EVENTARGUMENT", "")
                     .data("__VIEWSTATE", "")
                     .data("__VIEWSTATEGENERATOR", "")
                     .data("ctl00$ContentPlaceHolder1$ctl00$ucDangNhap$btnDangNhap", "")
+                   .header("Connection", "keep-alive")
                     .method(Connection.Method.POST)
                     .timeout(10000)
                     .execute();
 
         } catch (Exception e){
             mError = e.getMessage();
-            Log.e("Loi", "LoginDocumentGetter: " + e.getMessage());
+            Log.e("Loi", "LoginResponseGetter: " + e.getMessage());
         }
 
         // post event download done

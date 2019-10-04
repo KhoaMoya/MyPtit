@@ -11,16 +11,26 @@ import org.jsoup.Connection;
 
 public abstract class Downloader extends Thread {
 
-    String mURL;
-    Connection.Response mResponse;
-    String mError;
-    User mUser;
+    protected String mURL;
+    protected Connection.Response mResponse;
+    protected String mError;
+    protected User mUser;
+    protected String mTag;
 
-    Downloader(String mURL, User mUser) {
+    public Downloader(String tag, String mURL, User mUser) {
         this.mURL = mURL;
         this.mUser = mUser;
         this.mError = "";
         this.mResponse = null;
+        this.mTag = tag;
+    }
+
+    public String getTag() {
+        return mTag;
+    }
+
+    public void setTag(String mTag) {
+        this.mTag = mTag;
     }
 
     public String getURL() {

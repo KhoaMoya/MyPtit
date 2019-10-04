@@ -2,9 +2,6 @@ package com.khoa.myptit.thongbao.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +31,10 @@ import java.util.ArrayList;
  */
 
 
-public class FragmentThongBao extends Fragment implements ItemClickListener {
+public class ThongBaoFragment extends Fragment implements ItemClickListener {
 
-    private ThongBaoViewModel mThongBaoViewModel;
-    private static FragmentThongBao mFragmentThongBao;
+    private static ThongBaoViewModel mThongBaoViewModel;
+    private static ThongBaoFragment mThongBaoFragment;
     private FragmentThongbaoBinding mFragmentThongbaoBinding;
 
     static String KEY_ITEM = "keyItem";
@@ -60,11 +57,11 @@ public class FragmentThongBao extends Fragment implements ItemClickListener {
         return mFragmentThongbaoBinding.getRoot();
     }
 
-    public static FragmentThongBao getInstance(){
-        if(mFragmentThongBao ==null){
-            mFragmentThongBao = new FragmentThongBao();
+    public static ThongBaoFragment getInstance(){
+        if(mThongBaoFragment ==null){
+            mThongBaoFragment = new ThongBaoFragment();
         }
-        return mFragmentThongBao;
+        return mThongBaoFragment;
     }
 
     private void loadFirst(){
@@ -95,7 +92,6 @@ public class FragmentThongBao extends Fragment implements ItemClickListener {
         mThongBaoViewModel = ViewModelProviders.of(this).get(ThongBaoViewModel.class);
         mThongBaoViewModel.init(this);
         mFragmentThongbaoBinding.setViewmodel(mThongBaoViewModel);
-        mFragmentThongbaoBinding.appbarLayout.setElevation(0);
     }
 
     @Subscribe
@@ -105,7 +101,7 @@ public class FragmentThongBao extends Fragment implements ItemClickListener {
 
     @Override
     public void onClickItem(int position) {
-        Intent intent = new Intent(getActivity(), ActivityChiTietThongBao.class);
+        Intent intent = new Intent(getActivity(), ChiTietThongBaoActivity.class);
         intent.putExtra(KEY_ITEM, mThongBaoViewModel.getListThongBao().get(position));
         startActivity(intent);
         onStop();

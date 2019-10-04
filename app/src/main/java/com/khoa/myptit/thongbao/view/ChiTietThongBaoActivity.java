@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Created at 9/28/19 8:53 AM by Khoa
  */
 
-public class ActivityChiTietThongBao extends AppCompatActivity {
+public class ChiTietThongBaoActivity extends AppCompatActivity {
 
     private ChiTietThongBaoViewModel mViewModel;
     private ActivityChiTietThongBaoBinding mBinding;
@@ -56,7 +56,7 @@ public class ActivityChiTietThongBao extends AppCompatActivity {
     public void setupBinding(){
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chi_tiet_thong_bao);
         mViewModel = ViewModelProviders.of(this).get(ChiTietThongBaoViewModel.class);
-        ThongBao thongBao = (ThongBao) getIntent().getSerializableExtra(FragmentThongBao.KEY_ITEM);
+        ThongBao thongBao = (ThongBao) getIntent().getSerializableExtra(ThongBaoFragment.KEY_ITEM);
 
         if(mViewModel.mThongBao==null) mViewModel.init(thongBao);
 

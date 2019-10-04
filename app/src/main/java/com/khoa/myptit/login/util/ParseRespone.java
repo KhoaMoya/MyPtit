@@ -26,22 +26,31 @@ public class ParseRespone {
             if (!downloader.getError().isEmpty()) {
                 Toast.makeText(mContext, "Error parse document: " + downloader.getError(), Toast.LENGTH_SHORT).show();
             } else {
+                User mUser = downloader.getUser();
                 Connection.Response mResponse = downloader.getResponse();
                 Document mDocument = Jsoup.parse(mResponse.body());
-                Element mElementUserName = mDocument.select("span[id=\"ctl00_Header1_ucLogout_lblNguoiDung\"]").first();
+                Element mElementUserName = mDocument.select("span[id=ctl00_Header1_ucLogout_lblNguoiDung]").first();
+                Element viewState = mDocument.select("input[id=__VIEWSTATE]").first();
 
                 Log.e("Loi", "Nguoi dung: " + mElementUserName.text());
                 if (!mElementUserName.text().equals("")) {
+
+                    // update cookie
                     Map<String, String> loginCookies = mResponse.cookies();
                     String mCookie = loginCookies.get(User.mKeyCookie);
-
                     if (mCookie != null) {
-                        User mUser = downloader.getUser();
+                        Log.e("Loi", "sessionID: " + mCookie);
                         mUser.setCookie(mCookie);
-                        new BaseRepository<User>().write(mContext, User.mFileName, mUser);
                     }
+
+                    // update viewstate
+                    if(!viewState.val().isEmpty()) mUser.setViewState(viewState.val());
+                    new BaseRepository<User>().write(mContext, User.mFileName, mUser);
+
                     return true;
                 }
+
+
             }
             return false;
         }

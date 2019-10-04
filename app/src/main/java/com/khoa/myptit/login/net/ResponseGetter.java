@@ -14,11 +14,11 @@ import org.jsoup.Jsoup;
  * Created at 9/24/19 1:51 PM by Khoa
  */
 
-public class DocumentGetter extends Downloader {
+public class ResponseGetter extends Downloader {
 
 
-    public DocumentGetter(String mURL, User mUser) {
-        super(mURL, mUser);
+    public ResponseGetter(String tag, String mURL, User mUser) {
+        super(tag, mURL, mUser);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DocumentGetter extends Downloader {
 
         } catch (Exception e){
             mError = e.getMessage();
-            Log.e("Loi", "DocumentGetter: " + e.getMessage());
+            Log.e("Loi", "ResponseGetter: " + e.getMessage());
         }
         EventBus.getDefault().post(this);
     }

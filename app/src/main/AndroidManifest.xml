@@ -19,7 +19,7 @@
         tools:targetApi="m">
         <activity
             android:theme="@style/AppTheme_Main"
-            android:name=".thongbao.view.ActivityChiTietThongBao">
+            android:name=".thongbao.view.ChiTietThongBaoActivity">
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>

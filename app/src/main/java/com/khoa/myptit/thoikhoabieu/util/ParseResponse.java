@@ -49,10 +49,14 @@ public class ParseResponse {
     }
 
     public static HocKy getHocKy(Downloader downloader) {
-        Document document = Jsoup.parse(downloader.getResponse().body());
-        Element selectHocKy = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlChonNHHK]").first();
-        Element selectedHocKy = selectHocKy.select("option[selected]").first();
-        return new HocKy(selectedHocKy.val(), selectedHocKy.text());
+        try {
+            Document document = Jsoup.parse(downloader.getResponse().body());
+            Element selectHocKy = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlChonNHHK]").first();
+            Element selectedHocKy = selectHocKy.select("option[selected]").first();
+            return new HocKy(selectedHocKy.val(), selectedHocKy.text());
+        }catch (Exception e){
+            return new HocKy();
+        }
     }
 
     public static MonHoc[][] parseDocumentTKB(Context mContent, Downloader downloader) {

@@ -7,4 +7,13 @@ package com.khoa.myptit.main.viewmodel;
 import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
+    private int number;
+
+    public MainViewModel(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
 }

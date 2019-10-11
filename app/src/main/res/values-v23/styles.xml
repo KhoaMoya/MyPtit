@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Created at 9/26/19 3:16 PM by Khoa
   -->
 
@@ -12,6 +11,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorWhite</item>
         <item name="android:windowLightStatusBar">true</item>
+<!--        <item name="android:textViewStyle">@style/K2DTextViewStyle</item>-->
+<!--        <item name="buttonStyle">@style/K2DButtonStyle</item>-->
+<!--        <item name="android:textViewStyle">@style/NiramitTextViewStyle</item>-->
+<!--        <item name="buttonStyle">@style/NiramitButtonStyle</item>-->
 
     </style>
 </resources>

@@ -1,10 +1,15 @@
 package com.khoa.myptit.thoikhoabieu.adapter;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.khoa.myptit.thoikhoabieu.model.HocKy;
+import com.khoa.myptit.thoikhoabieu.model.MonHoc;
+import com.khoa.myptit.thoikhoabieu.model.Tuan;
 import com.khoa.myptit.thoikhoabieu.view.ThoiKhoaBieuPageFragment;
 
 /*
@@ -16,6 +21,11 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
     public ScreenSlidePagerAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    public ScreenSlidePagerAdapter(@NonNull FragmentManager fm, HocKy mHocKy) {
+        super(fm);
+        this.mHocKy = mHocKy;
     }
 
     public void setHocKy(HocKy hocKy){

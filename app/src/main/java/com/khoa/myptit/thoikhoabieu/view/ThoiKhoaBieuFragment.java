@@ -5,6 +5,7 @@ package com.khoa.myptit.thoikhoabieu.view;
  */
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,24 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.SavedStateVMFactory;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.FragmentThoikhoabieuBinding;
 import com.khoa.myptit.login.net.Downloader;
+import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.login.viewmodel.LoginViewModel;
+import com.khoa.myptit.thoikhoabieu.adapter.ScreenSlidePagerAdapter;
 import com.khoa.myptit.thoikhoabieu.model.HocKy;
+import com.khoa.myptit.thoikhoabieu.model.ThoiKhoaBieu;
 import com.khoa.myptit.thoikhoabieu.viewmodel.ThoiKhoaBieuViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import javax.security.auth.login.LoginException;
 
 /*
  * Created at 10/3/19 9:36 AM by Khoa
@@ -35,7 +42,11 @@ public class ThoiKhoaBieuFragment extends Fragment {
 
     private ThoiKhoaBieuViewModel mViewModel;
     private FragmentThoikhoabieuBinding mBinding;
-    private static ThoiKhoaBieuFragment mInstance;
+//    private static ThoiKhoaBieuFragment mInstance;
+
+
+    public ThoiKhoaBieuFragment() {
+    }
 
     @Nullable
     @Override
@@ -50,9 +61,13 @@ public class ThoiKhoaBieuFragment extends Fragment {
 
         setupClickTuan();
 
-        mViewModel.responseGetterThoiKhoaBieu();
-
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel.responseGetterThoiKhoaBieu();
     }
 
     private void setupClickTuan(){
@@ -105,13 +120,16 @@ public class ThoiKhoaBieuFragment extends Fragment {
         });
     }
 
-    public static ThoiKhoaBieuFragment getInstance(){
-        if(mInstance==null) mInstance = new ThoiKhoaBieuFragment();
-        return mInstance;
-    }
+//    public static ThoiKhoaBieuFragment getInstance(){
+//        if(mInstance==null) {
+//            Log.e("Loi", "instance = null");
+//            mInstance = new ThoiKhoaBieuFragment();
+//        }
+//        return mInstance;
+//    }
 
     private void setupBindings(){
-        mViewModel = ViewModelProviders.of(this).get(ThoiKhoaBieuViewModel.class);
+        mViewModel = ViewModelProviders.of(this, new SavedStateVMFactory(this)).get(ThoiKhoaBieuViewModel.class);
         mViewModel.init(getContext(), getFragmentManager());
         mBinding.setViewmodel(mViewModel);
     }

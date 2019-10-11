@@ -117,6 +117,7 @@
             android:visibility="@{viewmodel.showTKB}"
             app:setAdapter="@{viewmodel.mPagerAdapter}"
             app:setCurrentItem="@{viewmodel.mPosition}">
+
         </androidx.viewpager.widget.ViewPager>
 
         <ProgressBar

@@ -2,7 +2,11 @@
   ~ Created at 10/3/19 9:57 PM by Khoa
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <data>
+        <variable
+            name="viewModel"
+            type="com.khoa.myptit.thoikhoabieu.viewmodel.ChiTietMonHocViewModel" />
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,10 +21,10 @@
             android:id="@+id/nothing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Không có thông tin"
             android:gravity="center"
-            android:visibility="gone"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            android:visibility="@{viewModel.mShowNothing}"
+            android:text="Tiết này không học"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <View
             android:layout_width="match_parent"
@@ -31,39 +35,128 @@
             android:id="@+id/tenMon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@{viewModel.mShowInfo}"
+            android:text="@{viewModel.getTenMH()}"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/colorBlack" />
 
-        <TextView
-            android:id="@+id/nhom"
+<!--        nhom-->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
-            android:textColor="@color/colorBlack" />
+            android:visibility="@{viewModel.mShowInfo}"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/lop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Nhóm:" />
 
-        <TextView
-            android:id="@+id/phong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack" />
+            <TextView
+                android:id="@+id/nhom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@{viewModel.getNhom()}"
+                android:layout_gravity="center_horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/giangvien"
+<!--        lop-->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack" />
+            android:layout_height="20dp"
+            android:visibility="@{viewModel.mShowInfo}"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tinchi"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Lớp:" />
+
+            <TextView
+                android:id="@+id/lop"
+                android:layout_width="0dp"
+                android:text="@{viewModel.getLop()}"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
+
+<!--        phong-->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack" />
+            android:layout_height="20dp"
+            android:visibility="@{viewModel.mShowInfo}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Phòng:" />
+
+            <TextView
+                android:id="@+id/phong"
+                android:layout_width="0dp"
+                android:text="@{viewModel.getPhong()}"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
+
+<!--        giang vien-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:visibility="@{viewModel.mShowInfo}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Giảng viên:" />
+
+            <TextView
+                android:id="@+id/giangvien"
+                android:layout_width="0dp"
+                android:text="@{viewModel.getGiangVien()}"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
+
+<!--        tin chi-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:visibility="@{viewModel.mShowInfo}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Tín chỉ:" />
+
+            <TextView
+                android:id="@+id/tinchi"
+                android:layout_width="0dp"
+                android:text="@{viewModel.getTinChi()}"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/ghichu"

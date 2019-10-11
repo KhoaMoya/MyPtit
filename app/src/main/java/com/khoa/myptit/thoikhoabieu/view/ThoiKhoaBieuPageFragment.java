@@ -24,14 +24,17 @@ import com.khoa.myptit.thoikhoabieu.model.Tuan;
 
 public class ThoiKhoaBieuPageFragment extends Fragment {
 
-    private Tuan mTuan;
+    private static Tuan mTuan;
     private FragmentViewpageTkbBinding mBinding;
 
     public ThoiKhoaBieuPageFragment(Tuan tuan) {
         this.mTuan = tuan;
     }
 
-    @Nullable
+    public ThoiKhoaBieuPageFragment() {
+    }
+
+        @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_viewpage_tkb, container, false);
@@ -39,114 +42,115 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         return mBinding.getRoot();
     }
 
-    private void showTable(MonHoc[][] monHocs){
+    private void showTable(MonHoc[][] monHocs) {
 
         // tiet 1
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[1][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet1.addView(createItem(content, 1, i));
         }
 
         // tiet 2
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[2][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet2.addView(createItem(content, 2, i));
         }
 
         // tiet 3
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[3][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet3.addView(createItem(content, 3, i));
         }
 
         // tiet 4
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[4][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet4.addView(createItem(content, 4, i));
         }
 
         // tiet 5
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[5][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet5.addView(createItem(content, 5, i));
         }
 
         // tiet 6
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[6][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet6.addView(createItem(content, 6, i));
         }
 
         // tiet 7
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[7][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet7.addView(createItem(content, 7, i));
         }
 
         // tiet 8
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[8][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet8.addView(createItem(content, 8, i));
         }
 
         // tiet 9
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[9][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet9.addView(createItem(content, 9, i));
         }
 
         // tiet 10
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[10][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet10.addView(createItem(content, 10, i));
         }
 
         // tiet 11
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[11][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet11.addView(createItem(content, 11, i));
         }
 
         // tiet 12
-        for(int i=2; i<=7; i++){
+        for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[12][i];
-            if(monHoc!=null) content = monHoc.getTenMon() + "\n\n" + monHoc.getPhongHoc();
+            if (monHoc != null) content = htmlContent(monHoc);
             mBinding.tiet12.addView(createItem(content, 12, i));
         }
     }
 
-    private TextView createItem(String text, final int tiet, final int thu){
+    private TextView createItem(String text, final int tiet, final int thu) {
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
         params.weight = 2.0f;
         textView.setLayoutParams(params);
         textView.setGravity(Gravity.CENTER);
+        textView.setPadding(3, 0, 3, 0);
         textView.setBackground(getContext().getDrawable(R.drawable.background_stroke));
 
-        textView.setText(text);
+        textView.setText(android.text.Html.fromHtml(text));
         textView.setTextSize(12);
         textView.setTextColor(getContext().getResources().getColor(R.color.colorBlack));
 
@@ -154,11 +158,16 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MonHoc[][] monHocs = mTuan.getMonHocs();
-                MonHoc monHoc = monHocs[tiet][thu];
-                ChiTietMonHocDialog mDialog = new ChiTietMonHocDialog(getContext());
-                mDialog.show(monHoc);
+                new ChiTietMonHocDialogFragment(getContext(), monHocs[tiet][thu]).show(getFragmentManager(), "ChiTietMonHocDialogFragment");
             }
         });
         return textView;
+    }
+
+    private String htmlContent(MonHoc monHoc) {
+        String content = "<font color=\"black\">" + monHoc.getTenMon() + "</font><br><br>";
+        if (!monHoc.getPhongHoc().isEmpty())
+            content += "<font color=\"#03A9F4\">" + monHoc.getPhongHoc() + "</font>";
+        return content;
     }
 }

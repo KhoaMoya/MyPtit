@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -42,22 +42,6 @@
         <item name="android:windowExitAnimation">@anim/popup_hide</item>
 <!--        <item name="android:textViewStyle">@style/NiramitTextViewStyle</item>-->
 <!--        <item name="buttonStyle">@style/NiramitButtonStyle</item>-->
-    </style>
-
-    <style name="K2DTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/k2d_regular</item>
-    </style>
-
-    <style name="K2DButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/k2d_regular</item>
-    </style>
-
-    <style name="NiramitTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/niramit_regular</item>
-    </style>
-
-    <style name="NiramitButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/niramit_regular</item>
     </style>
 
 </resources>

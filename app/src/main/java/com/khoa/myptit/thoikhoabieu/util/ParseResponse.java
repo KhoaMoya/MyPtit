@@ -23,29 +23,36 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class ParseResponse {
 
     public static ArrayList<Tuan> getListTuan(Downloader downloader) {
-        ArrayList<Tuan> listTuan = new ArrayList<>();
-        Document document = Jsoup.parse(downloader.getResponse().body());
+        try {
+            ArrayList<Tuan> listTuan = new ArrayList<>();
+            Document document = Jsoup.parse(downloader.getResponse().body());
 
-        Element select = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlTuan]").first();
-        Elements options = select.select("option");
-        for (Element op : options) {
+            Element select = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlTuan]").first();
+            Elements options = select.select("option");
+            for (Element op : options) {
 //            Tuần 01 [Từ 12/08/2019 -- Đến 18/08/2019]
 //            01234567890123456789012345678901234567890
-            String string = op.text();
-            String tenTuan = string.substring(0, 7);
-            String ngayBD = string.substring(12, 22);
-            String ngayKT = string.substring(29, 40);
-            Log.e("Loi", ngayKT);
-            String value = op.val();
-            Tuan tuan = new Tuan(tenTuan, value, ngayBD, ngayKT);
-            listTuan.add(tuan);
+                String string = op.text();
+                String tenTuan = string.substring(0, 7);
+                String ngayBD = string.substring(12, 22);
+                String ngayKT = string.substring(29, 40);
+                Log.e("Loi", ngayKT);
+                String value = op.val();
+                Tuan tuan = new Tuan(tenTuan, value, ngayBD, ngayKT);
+                listTuan.add(tuan);
+            }
+            return listTuan;
+        } catch (Exception e) {
+            Log.e("Loi", e.getMessage());
+            return new ArrayList<>();
         }
-        return listTuan;
     }
 
     public static HocKy getHocKy(Downloader downloader) {
@@ -54,7 +61,7 @@ public class ParseResponse {
             Element selectHocKy = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlChonNHHK]").first();
             Element selectedHocKy = selectHocKy.select("option[selected]").first();
             return new HocKy(selectedHocKy.val(), selectedHocKy.text());
-        }catch (Exception e){
+        } catch (Exception e) {
             return new HocKy();
         }
     }
@@ -65,6 +72,12 @@ public class ParseResponse {
 
         ArrayList<MonHoc> listMH = new ArrayList<>();
         Document document = Jsoup.parse(downloader.getResponse().body());
+
+        // tìm ngày bắt đầu của tuần
+        String ngayBatDauTuan = "";
+        Element select = document.select("select[id=ctl00_ContentPlaceHolder1_ctl00_ddlTuan]").first();
+        Element selectedOption = select.select("option[selected=selected]").first();
+        if(selectedOption!=null) ngayBatDauTuan = selectedOption.text().substring(12, 22);
 
 
         // update viewstate
@@ -112,7 +125,7 @@ public class ParseResponse {
         MonHoc[][] arrMonHoc = new MonHoc[13][8];
         for (int tiet = 1; tiet <= 12; tiet++) {
             for (int thu = 2; thu <= 7; thu++) {
-                MonHoc monHoc = getMH(listMH, tiet, thu);
+                MonHoc monHoc = getMH(listMH, ngayBatDauTuan, tiet, thu);
                 arrMonHoc[tiet][thu] = monHoc;
             }
         }
@@ -121,7 +134,7 @@ public class ParseResponse {
     }
 
 
-    public static MonHoc getMH(ArrayList<MonHoc> list, int tiet, int thu) {
+    public static MonHoc getMH(ArrayList<MonHoc> list, String ngayBatDauTuan, int tiet, int thu) {
         String[] arrThu = {"Thứ 0", "Thứ Một", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"};
         ArrayList<String> listThu = new ArrayList<>(Arrays.asList(arrThu));
 
@@ -131,11 +144,14 @@ public class ParseResponse {
                 int tietKT = Integer.valueOf(monHoc.getTietBatDau()) + Integer.valueOf(monHoc.getSoTiet()) - 1;
                 int tietBD = Integer.valueOf(monHoc.getTietBatDau());
                 if (tiet <= tietKT && tiet >= tietBD) {
+                    monHoc.setNgay(addDate(ngayBatDauTuan, thu - 2));
+                    monHoc.setTiet(tiet);
                     return monHoc;
                 }
             }
         }
-        return null;
+
+        return new MonHoc(listThu.get(thu), tiet, addDate(ngayBatDauTuan, thu - 2));
     }
 
     public static int getCurrentTuan(ArrayList<Tuan> list) {
@@ -155,6 +171,22 @@ public class ParseResponse {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static String addDate(String startDate, int numberDate) {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String resultDate = "";
+        try {
+            Date date = df.parse(startDate);
+            Calendar cal = GregorianCalendar.getInstance();
+            cal.setTime(date);
+            cal.add(GregorianCalendar.DATE, numberDate);
+            resultDate = df.format(cal.getTime());
+        } catch (ParseException e) {
+            Log.e("Loi", "Loi parse date: " + startDate );
+        }
+//        Log.e("Loi", startDate + " + " + numberDate + " = " + resultDate);
+        return resultDate;
     }
 
 }

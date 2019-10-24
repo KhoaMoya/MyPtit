@@ -16,7 +16,6 @@ import org.jsoup.Jsoup;
 
 public class ResponseGetter extends Downloader {
 
-
     public ResponseGetter(String tag, String mURL, User mUser) {
         super(tag, mURL, mUser);
     }
@@ -28,7 +27,6 @@ public class ResponseGetter extends Downloader {
                     .cookie("ASP.NET_SessionId", mUser.getCookie())
                     .method(Connection.Method.GET)
                     .execute();
-
         } catch (Exception e){
             mError = e.getMessage();
             Log.e("Loi", "ResponseGetter: " + e.getMessage());

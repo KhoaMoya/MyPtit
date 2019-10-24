@@ -15,6 +15,7 @@ public class HocKy implements Serializable {
     private String mMaHocKy;
     private String mTenHocKy;
     private ArrayList<Tuan> mListTuan;
+    private String mLastUpdate;
 
     public HocKy() {
         this.mListTuan = new ArrayList<>();
@@ -26,6 +27,14 @@ public class HocKy implements Serializable {
         this.mMaHocKy = mMaHocKy;
         this.mTenHocKy = mTenHocKy;
         this.mListTuan = new ArrayList<>();
+    }
+
+    public String getLastUpdate() {
+        return mLastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.mLastUpdate = lastUpdate;
     }
 
     public String getMaHocKy() {

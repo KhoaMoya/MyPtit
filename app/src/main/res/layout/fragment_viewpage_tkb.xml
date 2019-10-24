@@ -3,6 +3,12 @@
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.khoa.myptit.thoikhoabieu.viewmodel.ThoiKhoaBieuPageViewModel" />
+    </data>
+
     <LinearLayout
 
         android:layout_width="match_parent"
@@ -95,7 +101,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="@{viewmodel.showTKB}">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -191,7 +198,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@drawable/background_gradient_blue"
                     android:gravity="center"
                     android:text="11h - 12h"
                     android:textColor="@color/colorWhite" />
@@ -371,5 +378,12 @@
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:visibility="@{viewmodel.showLoading}"/>
     </LinearLayout>
 </layout>

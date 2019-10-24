@@ -21,9 +21,8 @@
             android:id="@+id/nothing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:visibility="@{viewModel.mShowNothing}"
-            android:text="Tiết này không học"
+            android:text="Không học"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <View
@@ -39,6 +38,11 @@
             android:text="@{viewModel.getTenMH()}"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.getThoiGian()}"/>
 
 <!--        nhom-->
         <LinearLayout

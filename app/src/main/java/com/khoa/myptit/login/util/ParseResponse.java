@@ -19,7 +19,7 @@ import org.jsoup.nodes.Element;
 
 import java.util.Map;
 
-public class ParseRespone {
+public class ParseResponse {
 
     public static boolean checkLogin(Context mContext, Downloader downloader) {
         if (downloader != null) {

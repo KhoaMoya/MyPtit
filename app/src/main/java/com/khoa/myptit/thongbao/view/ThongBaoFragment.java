@@ -2,9 +2,11 @@ package com.khoa.myptit.thongbao.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.FragmentThongbaoBinding;
+import com.khoa.myptit.login.repository.BaseRepository;
+import com.khoa.myptit.main.MainActivity;
 import com.khoa.myptit.thongbao.adapter.ItemClickListener;
+import com.khoa.myptit.thongbao.model.TatCaThongBao;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.viewmodel.ThongBaoViewModel;
 
@@ -33,8 +38,7 @@ import java.util.ArrayList;
 
 public class ThongBaoFragment extends Fragment implements ItemClickListener {
 
-    private static ThongBaoViewModel mThongBaoViewModel;
-    private static ThongBaoFragment mThongBaoFragment;
+    private ThongBaoViewModel mThongBaoViewModel;
     private FragmentThongbaoBinding mFragmentThongbaoBinding;
 
     static String KEY_ITEM = "keyItem";
@@ -46,57 +50,44 @@ public class ThongBaoFragment extends Fragment implements ItemClickListener {
 
         mFragmentThongbaoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_thongbao, container, false);
 
-        setupBindings();
-
-        setupRefreshListener();
-
-        setupListThongBaoChangeListener();
-
-        loadFirst();
-
         return mFragmentThongbaoBinding.getRoot();
     }
 
-    public static ThongBaoFragment getInstance(){
-        if(mThongBaoFragment ==null){
-            mThongBaoFragment = new ThongBaoFragment();
-        }
-        return mThongBaoFragment;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setupBindings(savedInstanceState);
+
+        setupThongBaoChangeListener();
+
+        loadFirst();
+
     }
 
     private void loadFirst(){
-        mFragmentThongbaoBinding.swipeRefresh.setRefreshing(true);
-        mThongBaoViewModel.loadListFromFile();
+        mThongBaoViewModel.loadThongBao();
     }
 
-    private void setupListThongBaoChangeListener(){
-        mThongBaoViewModel.mListThongBao.observe(this, new Observer<ArrayList<ThongBao>>() {
+    private void setupThongBaoChangeListener(){
+        mThongBaoViewModel.mTatCaThongBao.observe(this, new Observer<TatCaThongBao>() {
             @Override
-            public void onChanged(ArrayList<ThongBao> thongBaos) {
-                mThongBaoViewModel.mAdapter.notifyDataSetChanged();
-                mFragmentThongbaoBinding.swipeRefresh.setRefreshing(false);
+            public void onChanged(TatCaThongBao tatCaThongBao) {
+                mThongBaoViewModel.updateThongBao(tatCaThongBao);
             }
         });
     }
 
-    private void setupRefreshListener(){
-        mFragmentThongbaoBinding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-               mThongBaoViewModel.refreshListThongBao();
-            }
-        });
-    }
-
-    private void setupBindings(){
+    private void setupBindings(Bundle savedInstanceState){
         mThongBaoViewModel = ViewModelProviders.of(this).get(ThongBaoViewModel.class);
-        mThongBaoViewModel.init(this);
+        if(mThongBaoViewModel.mTatCaThongBao == null) mThongBaoViewModel.init(this);
         mFragmentThongbaoBinding.setViewmodel(mThongBaoViewModel);
     }
 
     @Subscribe
-    public void onEventParseListThongBaoDone(ArrayList<ThongBao> list){
-        mThongBaoViewModel.loadListThongBao(list);
+    public void onEventParseListThongBaoDone(TatCaThongBao tatCaThongBao){
+        new BaseRepository<TatCaThongBao>().write(getContext(), ThongBao.mFileName, tatCaThongBao);
+        mThongBaoViewModel.mTatCaThongBao.postValue(tatCaThongBao);
     }
 
     @Override

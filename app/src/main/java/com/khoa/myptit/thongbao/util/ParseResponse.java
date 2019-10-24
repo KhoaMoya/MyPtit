@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.khoa.myptit.login.repository.BaseRepository;
+import com.khoa.myptit.thongbao.model.TatCaThongBao;
 import com.khoa.myptit.thongbao.model.ThongBao;
 
 import org.jsoup.nodes.Document;
@@ -56,7 +57,7 @@ public class ParseResponse {
         }catch (Exception e){
             Log.e("Loi", "Loi parse document list thong bao: " + e.getMessage());
         }
-        new BaseRepository<ArrayList<ThongBao>>().write(mContext, ThongBao.mFileName, listThongBao);
+
         return listThongBao;
     }
 

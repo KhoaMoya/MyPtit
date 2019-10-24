@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="loginViewModel"
             type="com.khoa.myptit.login.viewmodel.LoginViewModel" />
@@ -13,103 +14,116 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
+        android:background="@drawable/background_gradient_blue"
         tools:context=".login.LoginActivity">
 
 
-        <Button
-            android:id="@+id/btn_login"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_input"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/background_button_color_primary"
-            android:text="Đăng nhập"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_password"
-            app:layout_constraintVertical_bias="0.25" />
-
-        <EditText
-            android:id="@+id/edt_password"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/background_black5_conner"
-            android:hint="Mật khẩu"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:paddingStart="20dp"
-            android:paddingEnd="40dp"
-            android:textColor="@color/colorBlack"
-            android:textColorHint="@color/colorBlack50"
-            android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_username" />
-
-        <EditText
-            android:id="@+id/edt_username"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/background_black5_conner"
-            android:hint="Mã sinh viên"
-            android:text="@{loginViewModel.getMaSV()}"
-            android:inputType="textAutoComplete"
-            android:maxLines="1"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:textColor="@color/colorBlack"
-            android:textColorHint="@color/colorBlack50"
-            android:textSize="15sp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white_conner"
+            android:paddingTop="20dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:elevation="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6">
 
-        <ImageView
-            android:id="@+id/img_logo_ptit"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/icon_app"
-            app:layout_constraintBottom_toTopOf="@+id/edt_username"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/edt_username"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/background_color_black5_conner"
+                android:hint="Mã sinh viên"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@{loginViewModel.getMaSV()}"
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack50"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/background_color_black5_conner"
+                android:hint="Mật khẩu"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingEnd="40dp"
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack50"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/edt_username" />
+
+            <info.androidhive.fontawesome.FontTextView
+                android:id="@+id/txt_eye"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="@{()-> loginViewModel.onClickShowPassword()}"
+                android:text="@string/fa_eye"
+                android:textColor="@color/colorBlack50"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_password"
+                app:layout_constraintEnd_toEndOf="@+id/edt_password"
+                app:layout_constraintTop_toTopOf="@+id/edt_password"
+                app:solid_icon="true" />
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/background_button_color_primary"
+                android:text="Đăng nhập"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_password" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
             android:text="My PTIT"
             android:textColor="@color/colorWhite"
-            android:textSize="22sp"
+            android:textSize="40sp"
             android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/container_input"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_logo_ptit" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35" />
 
-        <info.androidhive.fontawesome.FontTextView
-            android:id="@+id/txt_eye"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/fa_eye"
-            android:textColor="@color/colorBlack25"
-            android:textSize="15sp"
-            android:onClick="@{()-> loginViewModel.onClickShowPassword()}"
-            app:layout_constraintBottom_toBottomOf="@+id/edt_password"
-            app:layout_constraintEnd_toEndOf="@+id/edt_password"
-            app:layout_constraintTop_toTopOf="@+id/edt_password"
-            app:solid_icon="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite"
+            android:layout_marginStart="30dp"
+            android:text="Đăng nhập vào MyPtit bằng\ntài khoản trên Quản lý đào tạo."
+            app:layout_constraintTop_toBottomOf="@id/textView"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

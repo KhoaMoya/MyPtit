@@ -8,6 +8,8 @@ package com.khoa.myptit.thongbao.net;
 import android.content.Context;
 import android.util.Log;
 
+import com.khoa.myptit.main.Utils;
+import com.khoa.myptit.thongbao.model.TatCaThongBao;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.util.ParseResponse;
 
@@ -32,9 +34,9 @@ public class ListThongBaoDownloader extends Thread {
         try {
             Document mDocument = Jsoup.connect(mURL).get();
             ArrayList<ThongBao> list = ParseResponse.convertToListThongBao(mContext, mDocument);
-            EventBus.getDefault().post(list);
+            EventBus.getDefault().post(new TatCaThongBao(list, Utils.getCurrentTime()));
         } catch (Exception e){
-            Log.e("Loi", "Download list thong bao: " + e.getMessage());
+            Log.e("Loi", "Download tat ca thong bao: " + e.getMessage());
         }
     }
 }

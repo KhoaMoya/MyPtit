@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     mProgressDialog.dismiss();
                     Log.e("Loi", "Login fail");
-                    Toast.makeText(getBaseContext(), "Login fail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Thông tin đăng nhập không chính xác", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEventDownloadDocumentDone(LoginResponseGetter loginResponseGetter){
-        mLoginViewModel.checkLogin(loginResponseGetter);
+        if(loginResponseGetter.getTag().equals(LoginViewModel.TAG)) mLoginViewModel.checkLogin(loginResponseGetter);
     }
 
     public void initPermission(){

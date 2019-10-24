@@ -7,7 +7,7 @@ package com.khoa.myptit.thoikhoabieu.binding;
 import androidx.databinding.BindingAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class ThongBaoFragmentBinding {
+public class ThoiKhoaBieuFragmentBinding {
     @BindingAdapter("setCurrentItem")
     public static void setCurrentItem(ViewPager viewPager, int position){
         viewPager.setCurrentItem(position, true);

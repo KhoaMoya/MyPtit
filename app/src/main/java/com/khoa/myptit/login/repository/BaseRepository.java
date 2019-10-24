@@ -1,6 +1,8 @@
 package com.khoa.myptit.login.repository;
 
 import android.content.Context;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,7 +30,7 @@ public class BaseRepository<T> {
             inputStream = new ObjectInputStream(context.openFileInput(fileName));
             object = (T) inputStream.readObject();
         }catch (Exception e){
-            e.printStackTrace();
+            Log.e("Loi", "Loi doc file " + fileName +" : " + e.getMessage());
         } finally {
             if(inputStream!=null) {
                 try {

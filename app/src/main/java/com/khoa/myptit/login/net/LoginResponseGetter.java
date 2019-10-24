@@ -18,8 +18,8 @@ public class LoginResponseGetter extends Downloader {
 
     private final static String mURL = "http://qldt.ptit.edu.vn/default.aspx?page=gioithieu";
 
-    public LoginResponseGetter(User mUser) {
-        super(LoginViewModel.TAG, mURL, mUser);
+    public LoginResponseGetter(String tag, User mUser) {
+        super(tag, mURL, mUser);
     }
 
     @Override

@@ -5,6 +5,7 @@ package com.khoa.myptit.thoikhoabieu.view;
  */
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,30 +17,44 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.FragmentViewpageTkbBinding;
 import com.khoa.myptit.thoikhoabieu.model.MonHoc;
 import com.khoa.myptit.thoikhoabieu.model.Tuan;
+import com.khoa.myptit.thoikhoabieu.viewmodel.ThoiKhoaBieuPageViewModel;
 
 public class ThoiKhoaBieuPageFragment extends Fragment {
 
-    private static Tuan mTuan;
     private FragmentViewpageTkbBinding mBinding;
-
-    public ThoiKhoaBieuPageFragment(Tuan tuan) {
-        this.mTuan = tuan;
-    }
+    private ThoiKhoaBieuPageViewModel mViewModel;
+    private Tuan mTuan;
 
     public ThoiKhoaBieuPageFragment() {
     }
 
-        @Nullable
+    public ThoiKhoaBieuPageFragment(Tuan tuan) {
+        mTuan = tuan;
+    }
+
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_viewpage_tkb, container, false);
-        showTable(mTuan.getMonHocs());
+        mViewModel = ViewModelProviders.of(this).get(ThoiKhoaBieuPageViewModel.class);
+        mViewModel.init();
+        mBinding.setViewmodel(mViewModel);
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(savedInstanceState!=null) mTuan = (Tuan) savedInstanceState.getSerializable("tuan");
+        showTable(mTuan.getMonHocs());
+        mViewModel.showTKB.set(View.VISIBLE);
+        mViewModel.showLoading.set(View.GONE);
     }
 
     private void showTable(MonHoc[][] monHocs) {
@@ -48,7 +63,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[1][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet1.addView(createItem(content, 1, i));
         }
 
@@ -56,7 +71,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[2][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet2.addView(createItem(content, 2, i));
         }
 
@@ -64,7 +79,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[3][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet3.addView(createItem(content, 3, i));
         }
 
@@ -72,7 +87,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[4][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet4.addView(createItem(content, 4, i));
         }
 
@@ -80,7 +95,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[5][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet5.addView(createItem(content, 5, i));
         }
 
@@ -88,7 +103,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[6][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet6.addView(createItem(content, 6, i));
         }
 
@@ -96,7 +111,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[7][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet7.addView(createItem(content, 7, i));
         }
 
@@ -104,7 +119,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[8][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet8.addView(createItem(content, 8, i));
         }
 
@@ -112,7 +127,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[9][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet9.addView(createItem(content, 9, i));
         }
 
@@ -120,7 +135,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[10][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet10.addView(createItem(content, 10, i));
         }
 
@@ -128,7 +143,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[11][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet11.addView(createItem(content, 11, i));
         }
 
@@ -136,7 +151,7 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         for (int i = 2; i <= 7; i++) {
             String content = "";
             MonHoc monHoc = monHocs[12][i];
-            if (monHoc != null) content = htmlContent(monHoc);
+            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
             mBinding.tiet12.addView(createItem(content, 12, i));
         }
     }
@@ -169,5 +184,11 @@ public class ThoiKhoaBieuPageFragment extends Fragment {
         if (!monHoc.getPhongHoc().isEmpty())
             content += "<font color=\"#03A9F4\">" + monHoc.getPhongHoc() + "</font>";
         return content;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("tuan", mTuan);
     }
 }

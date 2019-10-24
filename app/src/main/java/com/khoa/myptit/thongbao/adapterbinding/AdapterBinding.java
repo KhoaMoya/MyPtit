@@ -4,6 +4,7 @@ package com.khoa.myptit.thongbao.adapterbinding;
  * Created at 9/26/19 8:09 PM by Khoa
  */
 
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;

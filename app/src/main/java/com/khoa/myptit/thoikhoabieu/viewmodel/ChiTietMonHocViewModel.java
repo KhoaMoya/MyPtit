@@ -19,7 +19,7 @@ public class ChiTietMonHocViewModel extends ViewModel {
 
     public void init(MonHoc mMonHoc) {
         this.mMonHoc = mMonHoc;
-        if (mMonHoc == null) {
+        if (mMonHoc.getTenMon() == null) {
             this.mShowInfo = new ObservableInt(View.GONE);
             this.mShowNothing = new ObservableInt(View.VISIBLE);
         } else {
@@ -51,5 +51,7 @@ public class ChiTietMonHocViewModel extends ViewModel {
     public String getTinChi() {
         return (mMonHoc != null) ? mMonHoc.getSoTinChi() : "";
     }
+
+    public String getThoiGian(){return (mMonHoc!=null) ? (mMonHoc.getThu() + " - Tiết " + mMonHoc.getTiet() + "  " + mMonHoc.getNgay()) : "";}
 
 }

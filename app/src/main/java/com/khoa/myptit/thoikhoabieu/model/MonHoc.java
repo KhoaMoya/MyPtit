@@ -16,19 +16,28 @@ public class MonHoc implements Serializable {
     private String mSoTinChi;
     private String mTietBatDau;
     private String mSoTiet;
+    private int mTiet;
     private String mThu;
     private String mLop;
     private String mGiangVien;
     private String mThi;
+    private String mNgay;
     private String mNgayBatDau;
     private String mNgayKetThuc;
     private String mTongKet4;
     private String mTongKet10;
     private String mTrangThai;
+    private String mHocPhi;
     private int mIdGhiChu;
 
 
     public MonHoc() {
+    }
+
+    public MonHoc(String thu, int tiet, String ngay){
+        mThu = thu;
+        mTiet = tiet;
+        mNgay = ngay;
     }
 
     public String getMaLop() {
@@ -173,5 +182,29 @@ public class MonHoc implements Serializable {
 
     public void setIdGhiChu(int mIdGhiChu) {
         this.mIdGhiChu = mIdGhiChu;
+    }
+
+    public String getNgay() {
+        return mNgay;
+    }
+
+    public void setNgay(String ngay) {
+        this.mNgay = ngay;
+    }
+
+    public int getTiet() {
+        return mTiet;
+    }
+
+    public void setTiet(int tiet) {
+        this.mTiet = tiet;
+    }
+
+    public String getHocPhi() {
+        return mHocPhi;
+    }
+
+    public void setHocPhi(String hocPhi) {
+        this.mHocPhi = hocPhi;
     }
 }

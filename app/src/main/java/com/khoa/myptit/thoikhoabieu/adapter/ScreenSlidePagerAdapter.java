@@ -1,5 +1,6 @@
 package com.khoa.myptit.thoikhoabieu.adapter;
 
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,8 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.khoa.myptit.thoikhoabieu.model.HocKy;
-import com.khoa.myptit.thoikhoabieu.model.MonHoc;
-import com.khoa.myptit.thoikhoabieu.model.Tuan;
 import com.khoa.myptit.thoikhoabieu.view.ThoiKhoaBieuPageFragment;
 
 /*

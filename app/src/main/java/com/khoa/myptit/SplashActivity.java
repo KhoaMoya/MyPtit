@@ -15,7 +15,7 @@ import com.khoa.myptit.login.model.User;
 import com.khoa.myptit.login.net.ResponseGetter;
 import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.main.MainActivity;
-import com.khoa.myptit.login.util.ParseRespone;
+import com.khoa.myptit.login.util.ParseResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @Subscribe
     public void onGetDocument(ResponseGetter responseGetter){
-        if(ParseRespone.checkLogin(this, responseGetter)){
+        if(ParseResponse.checkLogin(this, responseGetter)){
             Log.e("Loi", "Login thành công");
         } else {
             Log.e("Loi", "Login thất bại");

@@ -4,16 +4,20 @@ package com.khoa.myptit.main.viewmodel;
  * Created at 9/26/19 3:18 PM by Khoa
  */
 
+
+import androidx.databinding.ObservableField;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
-    private int number;
+    public ObservableField<String> mCurrentTag;
+    public Fragment mCurrentFragment;
+    public Fragment mThongBaoFragment;
+    public Fragment ThoiKhoaBieuFragment;
 
-    public MainViewModel(int number) {
-        this.number = number;
+    public void init(){
+        mCurrentTag = new ObservableField<>("");
+        mCurrentFragment = new Fragment();
     }
 
-    public int getNumber() {
-        return number;
-    }
 }

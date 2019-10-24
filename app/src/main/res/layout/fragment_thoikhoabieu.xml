@@ -11,125 +11,197 @@
             type="com.khoa.myptit.thoikhoabieu.viewmodel.ThoiKhoaBieuViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp">
 
-        <!--        txt hoc ky-->
-        <TextView
-            android:id="@+id/txt_hocky"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_layout"
+            android:stateListAnimator="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:maxLines="2"
-            android:visibility="@{viewmodel.showTKB}"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@{viewmodel.mTenHocKy}"
-            android:textColor="@color/colorBlack"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <!--         bar tuan-->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/colorWhite"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/frag_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Thời khóa biểu"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/txt_last_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@{viewmodel.mLastUpdate}"
+                        app:layout_constraintTop_toBottomOf="@id/frag_title"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite"
+                        android:text="Cập nhật"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:onClick="@{()->viewmodel.refreshThoiKhoaBieu()}"
+                        android:background="@drawable/background_button_color_primary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_tuan"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewmodel.showTKB}"
-            app:layout_constraintTop_toBottomOf="@id/txt_hocky">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
-                android:id="@+id/select_tuan"
+            <!--        txt hoc ky-->
+            <TextView
+                android:id="@+id/txt_hocky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:maxLines="2"
+                android:visibility="@{viewmodel.showTKB}"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@{viewmodel.mTenHocKy}"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--         bar tuan-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_tuan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewmodel.showTKB}"
+                app:layout_constraintTop_toBottomOf="@id/txt_hocky">
+
+                <LinearLayout
+                    android:id="@+id/select_tuan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:clickable="true"
+                    android:background="@drawable/background_clickable"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/txt_tuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:text="@{viewmodel.mTenTuan}"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp"
+                        android:text="@{viewmodel.mThoiGian}"
+                        android:textColor="@color/colorBlack50"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <info.androidhive.fontawesome.FontTextView
+                    android:id="@+id/prev"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/fa_chevron_left_solid"
+                    android:textColor="@color/colorBlack25"
+                    android:textSize="20sp"
+                    android:visibility="@{viewmodel.showTKB}"
+                    android:background="@drawable/background_clickable"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/select_tuan"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:solid_icon="true" />
+
+                <info.androidhive.fontawesome.FontTextView
+                    android:id="@+id/next"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="@string/fa_chevron_right_solid"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack25"
+                    android:textSize="20sp"
+                    android:visibility="@{viewmodel.showTKB}"
+                    android:background="@drawable/background_clickable"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/select_tuan"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:solid_icon="true" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--        table thoi khoa bieu-->
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_tuan"
+                android:visibility="@{viewmodel.showTKB}"
+                app:setAdapter="@{viewmodel.mPagerAdapter}"
+                app:setCurrentItem="@{viewmodel.mPosition}">
+
+            </androidx.viewpager.widget.ViewPager>
+
+            <ProgressBar
+                android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:clickable="true"
-                android:background="@drawable/background_clickable"
+                android:visibility="@{viewmodel.showLoading}"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/txt_tuan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@{viewmodel.mTenTuan}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/txt_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:text="@{viewmodel.mThoiGian}"
-                    android:textColor="@color/colorBlack50"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <info.androidhive.fontawesome.FontTextView
-                android:id="@+id/prev"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:text="@string/fa_chevron_left_solid"
-                android:textColor="@color/colorBlack25"
-                android:textSize="20sp"
-                android:background="@drawable/background_clickable"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/select_tuan"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:solid_icon="true" />
-
-            <info.androidhive.fontawesome.FontTextView
-                android:id="@+id/next"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="@string/fa_chevron_right_solid"
-                android:gravity="center"
-                android:textColor="@color/colorBlack25"
-                android:textSize="20sp"
-                android:background="@drawable/background_clickable"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/select_tuan"
-                app:layout_constraintTop_toTopOf="parent"
-                app:solid_icon="true" />
+                app:layout_constraintStart_toStartOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <!--        table thoi khoa bieu-->
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_tuan"
-            android:visibility="@{viewmodel.showTKB}"
-            app:setAdapter="@{viewmodel.mPagerAdapter}"
-            app:setCurrentItem="@{viewmodel.mPosition}">
-
-        </androidx.viewpager.widget.ViewPager>
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewmodel.showLoading}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

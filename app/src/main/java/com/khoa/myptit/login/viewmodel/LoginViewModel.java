@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.khoa.myptit.login.model.User;
 import com.khoa.myptit.login.net.LoginResponseGetter;
 import com.khoa.myptit.login.repository.BaseRepository;
-import com.khoa.myptit.login.util.ParseRespone;
+import com.khoa.myptit.login.util.ParseResponse;
 
 /*
  * Created at 9/23/19 12:15 PM by Khoa
@@ -43,16 +43,17 @@ public class LoginViewModel extends ViewModel {
         mUser.setMaKhau(password);
 
         mLoginStatus.setValue(LoginStatus.LOGINNING);
-        LoginResponseGetter mLoginResponseGetter = new LoginResponseGetter(mUser);
+        LoginResponseGetter mLoginResponseGetter = new LoginResponseGetter(TAG, mUser);
         mLoginResponseGetter.start();
     }
 
     public String getMaSV(){
+        if(mUser==null) return "";
         return mUser.getMaSV()==null ? "" : mUser.getMaSV();
     }
 
     public void checkLogin(LoginResponseGetter loginResponseGetter) {
-        if(ParseRespone.checkLogin(mContext, loginResponseGetter))
+        if(ParseResponse.checkLogin(mContext, loginResponseGetter))
             mLoginStatus.postValue(LoginStatus.SUCCESS);
         else mLoginStatus.postValue(LoginStatus.FAIL);
     }

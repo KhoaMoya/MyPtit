@@ -7,7 +7,10 @@
     <item android:state_pressed="false">
         <shape>
             <corners android:radius="10dp"/>
-            <solid android:color="@color/colorPrimary"/>
+            <gradient
+                android:angle="45"
+                android:startColor="#286CAF"
+                android:endColor="@color/colorPrimary"/>
         </shape>
 
     </item>

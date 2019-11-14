@@ -5,13 +5,14 @@ package com.khoa.myptit.xemdiem.viewmodel;
  */
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.khoa.myptit.login.model.User;
 import com.khoa.myptit.login.net.Downloader;
 import com.khoa.myptit.login.net.LoginResponseGetter;
@@ -24,6 +25,7 @@ import com.khoa.myptit.xemdiem.net.DownloadDocumentAllDiem;
 import com.khoa.myptit.xemdiem.util.ParseDiem;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class XemDiemViewModel extends ViewModel {
 
@@ -33,16 +35,30 @@ public class XemDiemViewModel extends ViewModel {
     public final String URLXemDiem = "http://qldt.ptit.edu.vn/Default.aspx?page=xemdiemthi";
 
     private Context mContext;
-    public MutableLiveData<ArrayList<DiemHocKy>> mLisDiemHocKy;
+    public MutableLiveData<ArrayList<DiemHocKy>> mListDiemHocKy;
     public ObservableInt showLoading;
     public ObservableInt showDiem;
-
+    public TreeMap<String, DiemMonHoc> mTreeMapMonHoc;
+    public TreeMap<String, ArrayList> mTreeMapDiem4;
+    public ArrayList<PieEntry> mEntryList;
+    public ArrayList<DiemMonHoc> mListHocLai;
+    public ArrayList<DiemMonHoc> mListHocCaiThien;
+    public  ArrayList<Integer> mListColor;
 
     public void init(Context context){
         mContext = context;
-        mLisDiemHocKy = new MutableLiveData<>(new ArrayList<DiemHocKy>());
+        mListDiemHocKy = new MutableLiveData<>(new ArrayList<DiemHocKy>());
         showLoading = new ObservableInt(View.VISIBLE);
         showDiem = new ObservableInt(View.GONE);
+        mTreeMapMonHoc = new TreeMap<>();
+        mTreeMapDiem4 = new TreeMap<>();
+        mEntryList = new ArrayList<>();
+        mListHocLai = new ArrayList<>();
+        mListHocCaiThien = new ArrayList<>();
+
+        mListColor = new ArrayList<>();
+        for (int c : ColorTemplate.PASTEL_COLORS) mListColor.add(c);
+        for (int c : ColorTemplate.COLORFUL_COLORS) mListColor.add(c);
     }
 
     public void refreshDiem(){
@@ -58,8 +74,14 @@ public class XemDiemViewModel extends ViewModel {
         }else{
             showLoading.set(View.GONE);
             showDiem.set(View.VISIBLE);
-            mLisDiemHocKy.postValue(list);
+            mListDiemHocKy.postValue(list);
         }
+    }
+
+    public void convertToPieChartData(ArrayList<DiemHocKy> diemHocKyArrayList){
+        ParseDiem.convertToTreeMapMonHoc(this, diemHocKyArrayList);
+        mTreeMapDiem4 = ParseDiem.convertToTreeMapDiem(mTreeMapMonHoc);
+        mEntryList = ParseDiem.convertToPieEntries(mTreeMapDiem4);
     }
 
     public void getXemDiem(Downloader downloader){
@@ -73,7 +95,7 @@ public class XemDiemViewModel extends ViewModel {
     public void postXemDiem(Downloader downloader){
         if(ParseResponse.checkLogin(mContext, downloader)){
             ArrayList<DiemHocKy> list = ParseDiem.convertToListHocKy(mContext, downloader);
-            mLisDiemHocKy.postValue(list);
+            mListDiemHocKy.postValue(list);
             showLoading.set(View.GONE);
             showDiem.set(View.VISIBLE);
         } else {

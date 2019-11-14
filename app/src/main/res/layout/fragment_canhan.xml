@@ -378,12 +378,12 @@
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/background_button_color_primary"
+            android:background="@drawable/background_stroken_primary_conner"
             android:text="Đăng xuất"
             android:textSize="15sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:layout_margin="10dp"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created at 10/26/19 7:11 PM by Khoa
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_clickable">
+
+        <TextView
+            android:id="@+id/txt_ten_hoc_ky"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="12dp"
+            android:text="Hoc ky 1 nam hoc 2018-2019"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintEnd_toStartOf="@id/txt_expand"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <info.androidhive.fontawesome.FontTextView
+            android:id="@+id/txt_expand"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/fa_caret_down_solid"
+            android:textSize="17sp"
+            android:textColor="@color/colorBlack50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/txt_ten_hoc_ky"
+            app:layout_constraintTop_toTopOf="parent"
+            app:solid_icon="true" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBlack5" />
+</LinearLayout>

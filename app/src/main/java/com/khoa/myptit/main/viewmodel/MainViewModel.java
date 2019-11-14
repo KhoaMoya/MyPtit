@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModel;
 public class MainViewModel extends ViewModel {
     public ObservableField<String> mCurrentTag;
     public Fragment mCurrentFragment;
-    public Fragment mThongBaoFragment;
-    public Fragment ThoiKhoaBieuFragment;
 
     public void init(){
         mCurrentTag = new ObservableField<>("");

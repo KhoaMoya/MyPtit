@@ -7,6 +7,9 @@ package com.khoa.myptit.xemdiem.util;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.databinding.ObservableInt;
+
+import com.github.mikephil.charting.data.PieEntry;
 import com.khoa.myptit.login.net.Downloader;
 import com.khoa.myptit.login.repository.BaseRepository;
 import com.khoa.myptit.xemdiem.model.DiemHocKy;
@@ -19,6 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class ParseDiem {
 
@@ -68,5 +72,47 @@ public class ParseDiem {
         }
 
         return null;
+    }
+
+    public static void convertToTreeMapMonHoc(XemDiemViewModel viewModel, ArrayList<DiemHocKy> hocKyArrayList){
+        viewModel.mListHocLai.clear();
+        viewModel.mListHocCaiThien.clear();
+        viewModel.mTreeMapMonHoc = new TreeMap<>();
+        for (DiemHocKy diemHocKy : hocKyArrayList) {
+            for (DiemMonHoc diemMonHoc : diemHocKy.getListMonHoc()) {
+                String tenMonHoc = diemMonHoc.getTenMonHoc();
+                if(viewModel.mTreeMapMonHoc.containsKey(tenMonHoc)){
+                    DiemMonHoc monHoc = viewModel.mTreeMapMonHoc.get(tenMonHoc);
+                    if(monHoc.getTK4().equals("F")) viewModel.mListHocLai.add(diemMonHoc);
+                    else viewModel.mListHocCaiThien.add(diemMonHoc);
+                }
+                viewModel.mTreeMapMonHoc.put(tenMonHoc, diemMonHoc);
+            }
+        }
+    }
+
+    public static TreeMap<String, ArrayList> convertToTreeMapDiem(TreeMap<String, DiemMonHoc> treeMapMonHoc){
+        TreeMap<String, ArrayList> treeMapDiem4 = new TreeMap<>();
+        for (DiemMonHoc diemMonHoc : treeMapMonHoc.values()) {
+            String diemChu = diemMonHoc.getTK4();
+            if (diemChu.isEmpty()) continue;
+            if (treeMapDiem4.containsKey(diemChu)) {
+                ArrayList<DiemMonHoc> list = treeMapDiem4.get(diemChu);
+                list.add(diemMonHoc);
+            } else {
+                ArrayList<DiemMonHoc> list = new ArrayList<>();
+                list.add(diemMonHoc);
+                treeMapDiem4.put(diemChu, list);
+            }
+        }
+        return treeMapDiem4;
+    }
+
+    public static ArrayList<PieEntry> convertToPieEntries(TreeMap<String, ArrayList> treeMapDiem){
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        for (String key : treeMapDiem.keySet()) {
+            entries.add((new PieEntry(treeMapDiem.get(key).size(), key)));
+        }
+        return entries;
     }
 }

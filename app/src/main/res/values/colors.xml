@@ -14,5 +14,8 @@
     <color name="colorBlack50">#80000000</color>
     <color name="colorBlack75">#BF000000</color>
     <color name="colorGray">#E2E2E2</color>
-    <color name="colorPrimary15">#2603A9F4</color>
+    <color name="colorPrimary10">#1A03A9F4</color>
+    <color name="colorRed">#DB1F14</color>
+    <color name="colorHocLai">#11B6B6</color>
+    <color name="colorHocCaiThien">#DD5F29</color>
 </resources>

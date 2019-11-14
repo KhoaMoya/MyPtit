@@ -37,6 +37,13 @@
 <!--        <item name="buttonStyle">@style/NiramitButtonStyle</item>-->
     </style>
 
+    <style name="DialogLogout" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+        <!--        <item name="android:textViewStyle">@style/NiramitTextViewStyle</item>-->
+        <!--        <item name="buttonStyle">@style/NiramitButtonStyle</item>-->
+    </style>
+
     <style name="MyDialogTuan" parent="Theme.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/popup_appear</item>
         <item name="android:windowExitAnimation">@anim/popup_hide</item>

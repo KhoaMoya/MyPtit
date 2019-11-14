@@ -4,10 +4,14 @@ package com.khoa.myptit.xemdiem.model;
  * Created at 10/21/19 10:26 PM by Khoa
  */
 
+import com.khoa.myptit.libmoduleExpandable.Model.ParentListItem;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DiemHocKy implements Serializable {
+
+public class DiemHocKy implements Serializable, ParentListItem {
 
     private String mTenHocKy;
     private ArrayList<DiemMonHoc> mListMonHoc;
@@ -17,6 +21,7 @@ public class DiemHocKy implements Serializable {
     private String mDiemTBTichLuy4;
     private String mSoTinChiDat;
     private String mSoTinChiTichLuy;
+
 
     public DiemHocKy(String tenHocKy) {
         this.mTenHocKy = tenHocKy;
@@ -85,5 +90,15 @@ public class DiemHocKy implements Serializable {
 
     public void setSoTinChiTichLuy(String mSoTinChiTichLuy) {
         this.mSoTinChiTichLuy = mSoTinChiTichLuy;
+    }
+
+    @Override
+    public List<?> getChildItemList() {
+        return mListMonHoc;
+    }
+
+    @Override
+    public boolean isInitiallyExpanded() {
+        return false;
     }
 }

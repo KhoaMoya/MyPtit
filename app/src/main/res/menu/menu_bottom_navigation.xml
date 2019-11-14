@@ -17,10 +17,10 @@
         android:icon="@drawable/thong_bao"
         android:title="Thông báo"
         app:showAsAction="always"/>
-    <item android:id="@+id/page_tin_nhan"
-        android:icon="@drawable/tin_nhan"
-        android:title="Tin nhắn"
-        app:showAsAction="always"/>
+<!--    <item android:id="@+id/page_tin_nhan"-->
+<!--        android:icon="@drawable/tin_nhan"-->
+<!--        android:title="Tin nhắn"-->
+<!--        app:showAsAction="always"/>-->
     <item android:id="@+id/page_ca_nhan"
         android:icon="@drawable/ca_nhan"
         android:title="Cá nhân"

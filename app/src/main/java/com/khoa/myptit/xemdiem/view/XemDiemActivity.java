@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -28,12 +29,15 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.ActivityXemDiemBinding;
 import com.khoa.myptit.login.net.Downloader;
+import com.khoa.myptit.xemdiem.adapter.RecycleViewAdapterDiemHocKy;
 import com.khoa.myptit.xemdiem.model.DiemHocKy;
 import com.khoa.myptit.xemdiem.model.DiemMonHoc;
 import com.khoa.myptit.xemdiem.viewmodel.XemDiemViewModel;
@@ -42,15 +46,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 /*
  * Created at 10/21/19 9:13 PM by Khoa
  */
 
-public class XemDiemActivity extends AppCompatActivity {
+public class XemDiemActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private XemDiemViewModel mViewModel;
     private ActivityXemDiemBinding mBinding;
@@ -65,9 +66,16 @@ public class XemDiemActivity extends AppCompatActivity {
 
         setupLineChart();
 
+        setupRecycleViewDiemHocKy();
+
         setupDiemListener();
 
         mViewModel.loadAllDiem();
+    }
+
+    public void setupRecycleViewDiemHocKy(){
+        mBinding.recyclerViewHocKy.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recyclerViewHocKy.setNestedScrollingEnabled(false);
     }
 
     public void setupBinding(Bundle savedInstanceState) {
@@ -77,6 +85,7 @@ public class XemDiemActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this).get(XemDiemViewModel.class);
         if (savedInstanceState == null) mViewModel.init(this);
         mBinding.setViewmodel(mViewModel);
+
         mBinding.refreshDiem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,16 +93,35 @@ public class XemDiemActivity extends AppCompatActivity {
             }
         });
 
+        mBinding.layoutHocLai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ListMonHocDialog(XemDiemActivity.this, mViewModel.mListHocLai, "Học lại",
+                        getResources().getColor(R.color.colorHocLai)).show();
+            }
+        });
+
+        mBinding.layoutHocCaiThien.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ListMonHocDialog(XemDiemActivity.this, mViewModel.mListHocCaiThien, "Học cải thiện",
+                        getResources().getColor(R.color.colorHocCaiThien)).show();
+            }
+        });
     }
 
     public void setupDiemListener() {
-        mViewModel.mLisDiemHocKy.observe(this, new Observer<ArrayList<DiemHocKy>>() {
+        mViewModel.mListDiemHocKy.observe(this, new Observer<ArrayList<DiemHocKy>>() {
             @Override
             public void onChanged(ArrayList<DiemHocKy> listDiemHocKy) {
                 if (!listDiemHocKy.equals(new ArrayList<DiemHocKy>())) {
-                    Log.e("Loi", "update");
                     showPieChart(listDiemHocKy);
                     showLineChart(listDiemHocKy);
+
+                    mBinding.txtHocLai.setText(mViewModel.mListHocLai.size()+"");
+                    mBinding.txtHocCaiThien.setText(mViewModel.mListHocCaiThien.size()+"");
+                    RecycleViewAdapterDiemHocKy adapterDiemHocKy = new RecycleViewAdapterDiemHocKy(XemDiemActivity.this, listDiemHocKy);
+                    mBinding.recyclerViewHocKy.setAdapter(adapterDiemHocKy);
                 }
             }
         });
@@ -116,52 +144,21 @@ public class XemDiemActivity extends AppCompatActivity {
         mBinding.pieChart.setCenterTextSize(20);
         mBinding.pieChart.setEntryLabelColor(Color.WHITE);
         mBinding.pieChart.setEntryLabelTextSize(13f);
+
+        mBinding.pieChart.setOnChartValueSelectedListener(this);
     }
 
-    private void showPieChart(ArrayList<DiemHocKy> listDiemHocKi) {
+    private void showPieChart(ArrayList<DiemHocKy> diemHocKyArrayList) {
 
-        // tong hop diem cac mon
-        int soMonDaHoc = 0;
-        int soTinChiNo = 0;
-        Map<String, Integer> map = new HashMap<>();
-        for (DiemHocKy diemHocKy : listDiemHocKi) {
-            for (DiemMonHoc diemMonHoc : diemHocKy.getListMonHoc()) {
-                String diemChu = diemMonHoc.getTK4();
-                if (diemChu.isEmpty()) continue;
-                soMonDaHoc++;
-                if (diemChu.equals("F")) soTinChiNo += Integer.valueOf(diemMonHoc.getSoTinChi());
-                if (map.containsKey(diemChu)) {
-                    int dem = map.get(diemChu);
-                    map.remove(diemChu);
-                    map.put(diemChu, dem + 1);
-                } else {
-                    map.put(diemChu, 1);
-                }
-            }
-        }
+        mViewModel.convertToPieChartData(diemHocKyArrayList);
 
-        // sap xep diem theo thu tu ABC
-        map = new TreeMap<>(map);
-
-        // tạo list entry từ map
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        for (String key : map.keySet()) {
-            entries.add(new PieEntry(map.get(key), key));
-        }
-
-        // tạo piedataset từ list entry
-        PieDataSet dataSet = new PieDataSet(entries, "");
+        // tạo piedataset từ entry list
+        PieDataSet dataSet = new PieDataSet(mViewModel.mEntryList, "");
         dataSet.setDrawValues(true);
         dataSet.setSliceSpace(0f);
         dataSet.setSelectionShift(5f);
 
-        ArrayList<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        dataSet.setColors(colors);
+        dataSet.setColors(mViewModel.mListColor);
 
 
         // tạo piedata từ piedataset
@@ -179,27 +176,34 @@ public class XemDiemActivity extends AppCompatActivity {
         mBinding.pieChart.animateXY(1500, 1500);
         mBinding.pieChart.invalidate();
 
-        if (listDiemHocKi.size() > 1) {
-            DiemHocKy lastHocKy = listDiemHocKi.get(listDiemHocKi.size() - 2);
+        if (mViewModel.mTreeMapMonHoc.size() > 1) {
+            ArrayList<String> values = new ArrayList<>();
+            DiemHocKy lastHocKy = diemHocKyArrayList.get(diemHocKyArrayList.size() - 2);
             mBinding.pieChart.setCenterText(lastHocKy.getDiemTBTichLuy4());
 
-            ArrayList<String> values = new ArrayList<>();
+            int soMonDaHoc= 0;
+            for(String tenMonHoc : mViewModel.mTreeMapMonHoc.keySet()){
+                if(!mViewModel.mTreeMapMonHoc.get(tenMonHoc).getTK4().isEmpty())
+                   soMonDaHoc ++;
+            }
             values.add(soMonDaHoc + "");
             values.add(lastHocKy.getSoTinChiTichLuy().isEmpty() ? "0" : lastHocKy.getSoTinChiTichLuy());
             values.add(lastHocKy.getDiemTBTichLuy10().isEmpty() ? "0" : lastHocKy.getDiemTBTichLuy10());
             values.add(lastHocKy.getDiemTBTichLuy4().isEmpty() ? "0" : lastHocKy.getDiemTBTichLuy4());
+
+            ArrayList<DiemMonHoc> monHocNoArrayList = mViewModel.mTreeMapDiem4.get("F");
+            int soTinChiNo = 0;
+
+            if (monHocNoArrayList != null) {
+                for (DiemMonHoc monHoc : monHocNoArrayList) {
+                    soTinChiNo += Integer.valueOf(monHoc.getSoTinChi());
+                }
+            }
             values.add(soTinChiNo + "");
 
             showLayoutInfo(values);
         }
 
-        if(map.get("F")!=null && soMonDaHoc>0) {
-            float soMonNo = map.get("F");
-            float tiLeQua = (1 - soMonNo / soMonDaHoc) * 100;
-            mBinding.tiLeQua.setText( String.format("%.1f", tiLeQua)+ "%");
-        } else {
-            mBinding.tiLeQua.setText("0%");
-        }
     }
 
     private void showLayoutInfo(ArrayList<String> values) {
@@ -320,11 +324,10 @@ public class XemDiemActivity extends AppCompatActivity {
 
         // set label cho truc X
         final ArrayList<String> labels = new ArrayList<>();
-        for(DiemHocKy diemHocKy : listDiemHocKy){
+        for (DiemHocKy diemHocKy : listDiemHocKy) {
             String string = diemHocKy.getTenHocKy();
             // Học kỳ 3 - Năm học 2018-2019
-            String label = string.charAt(7)+ "(" + string.charAt(21)+ string.charAt(22) + "-" + string.charAt(26)+ string.charAt(27)+")";
-            Log.e("Loi", label);
+            String label = string.charAt(7) + "(" + string.charAt(21) + string.charAt(22) + "-" + string.charAt(26) + string.charAt(27) + ")";
             labels.add(label);
         }
 
@@ -378,7 +381,7 @@ public class XemDiemActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
@@ -394,5 +397,23 @@ public class XemDiemActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        if (e == null) return;
+
+        PieEntry pieEntry = (PieEntry) e;
+        String label = pieEntry.getLabel();
+        String title = "Các môn điểm " + pieEntry.getLabel();
+        ArrayList<DiemMonHoc> list = mViewModel.mTreeMapDiem4.get(label);
+
+        int color = mViewModel.mListColor.get((int) h.getX());
+
+        new ListMonHocDialog(this, list, title, color).show();
+    }
+
+    @Override
+    public void onNothingSelected() {
     }
 }

@@ -4,9 +4,12 @@ package com.khoa.myptit.xemdiem.model;
  * Created at 10/21/19 10:26 PM by Khoa
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class DiemMonHoc implements Serializable {
+public class DiemMonHoc implements Serializable, Parcelable {
 
     public final static String mFileName = "diem.data";
     private String mMaMonHoc;
@@ -65,11 +68,21 @@ public class DiemMonHoc implements Serializable {
         this.mTK4 = mTK4;
     }
 
-    public String getmThi() {
+    public String getThi() {
         return mThi;
     }
 
     public void setmThi(String mThi) {
         this.mThi = mThi;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.page_ghi_chu:
                 newTag = TAG.GhiChu;
                 break;
-            case R.id.page_tin_nhan:
-                newTag = TAG.TinNhan;
-                break;
+//            case R.id.page_tin_nhan:
+//                newTag = TAG.TinNhan;
+//                break;
             case R.id.page_thoi_khoa_bieu:
                 newFragment = getSupportFragmentManager().findFragmentByTag(TAG.ThoiKhoaBieu);
                 if (newFragment == null) newFragment = new ThoiKhoaBieuFragment();
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     .beginTransaction()
                     .add(R.id.frame_layout, newFragment, newTag)
                     .commit();
-//            Log.e("Loi", "1");
         } else {
             Fragment prevfragment = getSupportFragmentManager().findFragmentByTag(newTag);
             if (prevfragment == null) {
@@ -102,14 +101,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .hide(mMainViewModel.mCurrentFragment)
                         .add(R.id.frame_layout, newFragment, newTag)
                         .commit();
-//                Log.e("Loi", "2");
             } else {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .hide(mMainViewModel.mCurrentFragment)
                         .show(newFragment)
                         .commit();
-//                Log.e("Loi", "3");
             }
         }
 

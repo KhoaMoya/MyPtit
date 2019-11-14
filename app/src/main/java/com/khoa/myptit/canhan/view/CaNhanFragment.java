@@ -63,10 +63,7 @@ public class CaNhanFragment extends Fragment {
         mBinding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mViewModel.deleteData();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                new LogoutDialog(getActivity(), mViewModel).show();
             }
         });
 

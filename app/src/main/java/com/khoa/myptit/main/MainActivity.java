@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.khoa.myptit.R;
 import com.khoa.myptit.canhan.view.CaNhanFragment;
 import com.khoa.myptit.databinding.ActivityMainBinding;
+import com.khoa.myptit.ghichu.view.GhiChuFragment;
 import com.khoa.myptit.main.viewmodel.MainViewModel;
 import com.khoa.myptit.thoikhoabieu.view.ThoiKhoaBieuFragment;
 import com.khoa.myptit.thongbao.view.ThongBaoFragment;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 newTag = TAG.ThongBao;
                 break;
             case R.id.page_ghi_chu:
+                newFragment = getSupportFragmentManager().findFragmentByTag(TAG.GhiChu);
+                if (newFragment == null) newFragment = new GhiChuFragment();
                 newTag = TAG.GhiChu;
                 break;
 //            case R.id.page_tin_nhan:

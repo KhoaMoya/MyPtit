@@ -115,6 +115,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             @Override
             public void onChanged(ArrayList<DiemHocKy> listDiemHocKy) {
                 if (!listDiemHocKy.equals(new ArrayList<DiemHocKy>())) {
+                    Log.e("Loi", "size: " + listDiemHocKy.size());
                     showPieChart(listDiemHocKy);
                     showLineChart(listDiemHocKy);
 
@@ -188,7 +189,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             }
             values.add(soMonDaHoc + "");
             values.add(lastHocKy.getSoTinChiTichLuy().isEmpty() ? "0" : lastHocKy.getSoTinChiTichLuy());
-            values.add(lastHocKy.getDiemTBTichLuy10().isEmpty() ? "0" : lastHocKy.getDiemTBTichLuy10());
+//            values.add(lastHocKy.getDiemTBTichLuy10().isEmpty() ? "0" : lastHocKy.getDiemTBTichLuy10());
             values.add(lastHocKy.getDiemTBTichLuy4().isEmpty() ? "0" : lastHocKy.getDiemTBTichLuy4());
 
             ArrayList<DiemMonHoc> monHocNoArrayList = mViewModel.mTreeMapDiem4.get("F");
@@ -212,7 +213,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Số môn đã học");
         labels.add("Số tín chỉ tích lũy");
-        labels.add("Điểm TBTL hệ 10");
+//        labels.add("Điểm TBTL hệ 10");
         labels.add("Điểm TBTL hệ 4");
         labels.add("Số tín chỉ nợ");
 
@@ -327,16 +328,21 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         for (DiemHocKy diemHocKy : listDiemHocKy) {
             String string = diemHocKy.getTenHocKy();
             // Học kỳ 3 - Năm học 2018-2019
-            String label = string.charAt(7) + "(" + string.charAt(21) + string.charAt(22) + "-" + string.charAt(26) + string.charAt(27) + ")";
-            labels.add(label);
+            try {
+                String label = string.charAt(7) + "(" + string.charAt(21) + string.charAt(22) + "-" + string.charAt(26) + string.charAt(27) + ")";
+                labels.add(label);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
-        mBinding.lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                return labels.get(Math.round(value));
-            }
-        });
+        mBinding.lineChart.getXAxis().setEnabled(false);
+//        mBinding.lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
+//            @Override
+//            public String getAxisLabel(float value, AxisBase axis) {
+//                return labels.get(Math.round(value));
+//            }
+//        });
 
         // set data
         mBinding.lineChart.setData(data);

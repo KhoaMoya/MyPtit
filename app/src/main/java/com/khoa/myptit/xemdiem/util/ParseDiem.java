@@ -55,9 +55,9 @@ public class ParseDiem {
 
             if(element.toString().contains("class=\"row-diemTK\"")){
                 Elements columns = element.select("span");
-                if(columns.get(0).text().equals("Điểm trung bình học kỳ hệ 10/100:")) diemHocKy.setDiemTB10(columns.get(1).text());
+//                if(columns.get(0).text().equals("Điểm trung bình học kỳ hệ 10/100:")) diemHocKy.setDiemTB10(columns.get(1).text());
                 if(columns.get(0).text().equals("Điểm trung bình học kỳ hệ 4:")) diemHocKy.setDiemTB4(columns.get(1).text());
-                if(columns.get(0).text().equals("Điểm trung bình tích lũy:")) diemHocKy.setDiemTBTichLuy10(columns.get(1).text());
+//                if(columns.get(0).text().equals("Điểm trung bình tích lũy:")) diemHocKy.setDiemTBTichLuy10(columns.get(1).text());
                 if(columns.get(0).text().equals("Điểm trung bình tích lũy (hệ 4):")) diemHocKy.setDiemTBTichLuy4(columns.get(1).text());
                 if(columns.get(0).text().equals("Số tín chỉ đạt:")) diemHocKy.setSoTinChiDat(columns.get(1).text());
                 if(columns.get(0).text().equals("Số tín chỉ tích lũy:")) diemHocKy.setSoTinChiTichLuy(columns.get(1).text());

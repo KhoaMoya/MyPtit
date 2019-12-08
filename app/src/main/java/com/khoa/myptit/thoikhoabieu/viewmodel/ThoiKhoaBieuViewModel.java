@@ -5,6 +5,7 @@ package com.khoa.myptit.thoikhoabieu.viewmodel;
  */
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 
 import androidx.databinding.ObservableField;
@@ -45,6 +46,7 @@ public class ThoiKhoaBieuViewModel extends ViewModel {
     public ObservableInt showLoading;
     public ObservableInt showTKB;
     public ObservableField<String> mLastUpdate;
+    public ObservableField<String> mStatus;
 
     public void init(Context context, FragmentManager fm) {
         this.mContext = context;
@@ -57,6 +59,7 @@ public class ThoiKhoaBieuViewModel extends ViewModel {
         showLoading = new ObservableInt(View.VISIBLE);
         showTKB = new ObservableInt(View.GONE);
         mLastUpdate = new ObservableField<>();
+        mStatus = new ObservableField<>();
 
         mPagerAdapter = new ScreenSlidePagerAdapter(fm);
         mPagerAdapter.setHocKy(new HocKy());
@@ -67,63 +70,74 @@ public class ThoiKhoaBieuViewModel extends ViewModel {
         showLoading.set(View.VISIBLE);
 
         HocKy hocKy = new BaseRepository<HocKy>().read(mContext, HocKy.mFileName);
-        if ( hocKy!= null) mHocKy.postValue(hocKy);
+        if (hocKy != null) mHocKy.postValue(hocKy);
         else {
             index = 0;
             new ResponseGetter(TAG_GET, mURL, new BaseRepository<User>().read(mContext, User.mFileName)).start();
         }
     }
 
-    public void refreshThoiKhoaBieu(){
-        if(showLoading.get() != View.VISIBLE) {
-            showTKB.set(View.GONE);
-            showLoading.set(View.VISIBLE);
+    public void refreshThoiKhoaBieu() {
+        showTKB.set(View.GONE);
+        showLoading.set(View.VISIBLE);
 
-            new ResponseGetter(TAG_GET, mURL, new BaseRepository<User>().read(mContext, User.mFileName)).start();
-        }
+        new ResponseGetter(TAG_GET, mURL, new BaseRepository<User>().read(mContext, User.mFileName)).start();
     }
 
     public void checkLoginGetTKB(Downloader downloader) {
-        if (ParseResponse.checkLogin(mContext, downloader)) {
-            tempHocKy = com.khoa.myptit.thoikhoabieu.util.ParseResponse.getHocKy(downloader);
-            ArrayList<Tuan> mListTuan = com.khoa.myptit.thoikhoabieu.util.ParseResponse.getListTuan(downloader);
-            if (!mListTuan.isEmpty()) {
-                tempHocKy.setListTuan(mListTuan);
-                postNextTuan();
-            }
+        if (!downloader.getError().isEmpty()) {
+            showErrorStatus(downloader.getError());
         } else {
-            new LoginResponseGetter(TAG_GET, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            if (ParseResponse.checkLogin(mContext, downloader)) {
+                tempHocKy = com.khoa.myptit.thoikhoabieu.util.ParseResponse.getHocKy(downloader);
+                ArrayList<Tuan> mListTuan = com.khoa.myptit.thoikhoabieu.util.ParseResponse.getListTuan(downloader);
+                if (!mListTuan.isEmpty()) {
+                    tempHocKy.setListTuan(mListTuan);
+                    postNextTuan();
+                }
+            } else {
+                new LoginResponseGetter(TAG_GET, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            }
         }
     }
 
     public void checkLoginPostTKB(Downloader downloader) {
-        if (ParseResponse.checkLogin(mContext, downloader)) {
-            tempHocKy.getListTuan().get(index).setMonHocs(com.khoa.myptit.thoikhoabieu.util.ParseResponse.parseDocumentTKB(mContext, downloader));
-            index++;
-            if (index != tempHocKy.getListTuan().size()) {
-                postNextTuan();
-            } else {
-                showLoading.set(View.GONE);
-                showTKB.set(View.VISIBLE);
-                tempHocKy.setLastUpdate(Utils.getCurrentTime());
-                mHocKy.postValue(tempHocKy);
-                new BaseRepository<HocKy>().write(mContext, HocKy.mFileName, tempHocKy);
-            }
-
+        if (!downloader.getError().isEmpty()) {
+            showErrorStatus(downloader.getError());
         } else {
-            new LoginResponseGetter(TAG_LOGIN, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            if (ParseResponse.checkLogin(mContext, downloader)) {
+                tempHocKy.getListTuan().get(index).setMonHocs(com.khoa.myptit.thoikhoabieu.util.ParseResponse.parseDocumentTKB(mContext, downloader));
+                index++;
+                if (index != tempHocKy.getListTuan().size()) {
+                    postNextTuan();
+                } else {
+                    showLoading.set(View.GONE);
+                    showTKB.set(View.VISIBLE);
+                    tempHocKy.setLastUpdate(Utils.getCurrentTime());
+                    mHocKy.postValue(tempHocKy);
+                    new BaseRepository<HocKy>().write(mContext, HocKy.mFileName, tempHocKy);
+                }
+
+            } else {
+                new LoginResponseGetter(TAG_LOGIN, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            }
         }
     }
 
     public void checkLogin(Downloader downloader) {
-        if (ParseResponse.checkLogin(mContext, downloader)) {
-            loadThoiKhoaBieu();
+        if (!downloader.getError().isEmpty()) {
+            showErrorStatus(downloader.getError());
         } else {
-            new LoginResponseGetter(TAG_LOGIN, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            if (ParseResponse.checkLogin(mContext, downloader)) {
+                loadThoiKhoaBieu();
+            } else {
+                new LoginResponseGetter(TAG_LOGIN, new BaseRepository<User>().read(mContext, User.mFileName)).start();
+            }
         }
     }
 
     private void postNextTuan() {
+        showLoadingStatus("Đang tải môn học: " + tempHocKy.getListTuan().get(index).getTenTuan());
         new TKBTheoTuanPoster(TAG_POST, mURL, new BaseRepository<User>().read(mContext, User.mFileName)
                 , tempHocKy.getMaHocKy(), tempHocKy.getListTuan().get(index).getValue()).start();
     }
@@ -146,6 +160,14 @@ public class ThoiKhoaBieuViewModel extends ViewModel {
         Tuan tuan = mHocKy.getValue().getListTuan().get(position);
         mTenTuan.set(tuan.getTenTuan());
         mThoiGian.set(tuan.getNgayBatDau() + " - " + tuan.getNgayKetThuc());
+    }
+
+    private void showErrorStatus(String string) {
+        mStatus.set(Html.fromHtml("<p><font color=\"red\">Có lỗi xảy ra</font><p>") + string);
+    }
+
+    private void showLoadingStatus(String string) {
+        mStatus.set(string);
     }
 
 }

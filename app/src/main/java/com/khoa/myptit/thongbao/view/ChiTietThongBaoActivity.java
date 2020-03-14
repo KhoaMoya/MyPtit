@@ -1,18 +1,17 @@
 package com.khoa.myptit.thongbao.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.view.View;
 
 import com.khoa.myptit.R;
+import com.khoa.myptit.base.model.EventMessager;
 import com.khoa.myptit.databinding.ActivityChiTietThongBaoBinding;
 import com.khoa.myptit.thongbao.model.ThongBao;
 import com.khoa.myptit.thongbao.net.ContentThongBaoDownloader;
-import com.khoa.myptit.thongbao.viewmodel.ChiTietThongBaoViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,49 +22,45 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class ChiTietThongBaoActivity extends AppCompatActivity {
 
-    private ChiTietThongBaoViewModel mViewModel;
     private ActivityChiTietThongBaoBinding mBinding;
+    private MutableLiveData<String> content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupBinding();
+        mBinding = ActivityChiTietThongBaoBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        setupListenerContentChanged();
+        ThongBao thongBao = (ThongBao) getIntent().getSerializableExtra(ThongBaoFragment.KEY_ITEM);
 
-        loadContent();
-    }
+        mBinding.txtTitle.setText(thongBao.getTitle());
+        mBinding.txtTime.setText(thongBao.getTime());
 
-    public void setupListenerContentChanged(){
-        mViewModel.mContent.observe(this, new Observer<String>() {
+        content = new MutableLiveData<>();
+        content.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 mBinding.txtContent.setText(s);
-                mViewModel.showLoading.set(View.GONE);
-                mViewModel.showContent.set(View.VISIBLE);
+                mBinding.progress.setVisibility(View.GONE);
+                mBinding.txtContent.setVisibility(View.VISIBLE);
             }
         });
+
+        loadContent(thongBao.getLink());
     }
 
-    public void loadContent(){
-        String link = mViewModel.getLink();
+    public void loadContent(String link){
+        mBinding.progress.setVisibility(View.VISIBLE);
+        mBinding.txtContent.setVisibility(View.GONE);
         new ContentThongBaoDownloader(link).start();
     }
 
-    public void setupBinding(){
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chi_tiet_thong_bao);
-        mViewModel = ViewModelProviders.of(this).get(ChiTietThongBaoViewModel.class);
-        ThongBao thongBao = (ThongBao) getIntent().getSerializableExtra(ThongBaoFragment.KEY_ITEM);
-
-        if(mViewModel.mThongBao==null) mViewModel.init(thongBao);
-
-        mBinding.setViewmodel(mViewModel);
-    }
-
     @Subscribe
-    public void onEventParseContentDone(String content){
-        mViewModel.updateContent(content);
+    public void onEventMessage(EventMessager eventMessager){
+        if(eventMessager.getEvent() == EventMessager.EVENT.DOWNLOAD_FINNISH_DETAIL_NOTIFICATION) {
+            content.postValue((String) eventMessager.getData());
+        }
     }
 
     @Override

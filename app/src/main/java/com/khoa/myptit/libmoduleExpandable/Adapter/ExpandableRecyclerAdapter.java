@@ -53,7 +53,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      */
     protected List<Object> mItemList;
 
-    private List<? extends ParentListItem> mParentItemList;
+    protected List<? extends ParentListItem> mParentItemList;
     private ExpandCollapseListener mExpandCollapseListener;
     private List<RecyclerView> mAttachedRecyclerViewPool;
 
@@ -638,7 +638,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     // endregion
 
-    // region Data Manipulation
+    // region SimpleSubject Manipulation
 
     /**
      * Notify any registered observers that the ParentListItem reflected at {@code parentPosition}

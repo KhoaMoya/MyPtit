@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.khoa.myptit.login.LoginActivity;
-import com.khoa.myptit.login.model.User;
-import com.khoa.myptit.login.net.ResponseGetter;
-import com.khoa.myptit.login.repository.BaseRepository;
+import com.khoa.myptit.base.model.User;
+import com.khoa.myptit.base.net.HtmlGetter;
+import com.khoa.myptit.base.repository.BaseRepository;
 import com.khoa.myptit.main.MainActivity;
-import com.khoa.myptit.login.util.ParseResponse;
+import com.khoa.myptit.base.util.ParseResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }, 1000);
         } else {
-            //new ResponseGetter(URL.URL_THONG_BAO, user).start();
+            //new HtmlGetter(URL.URL_THONG_BAO, user).start();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -62,24 +62,5 @@ public class SplashActivity extends AppCompatActivity {
             }, 1000);
         }
 
-    }
-
-    @Subscribe
-    public void onGetDocument(ResponseGetter responseGetter){
-        if(ParseResponse.checkLogin(this, responseGetter)){
-            Log.e("Loi", "Login thành công");
-        } else {
-            Log.e("Loi", "Login thất bại");
-        }
-    }
-
-    public void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
     }
 }

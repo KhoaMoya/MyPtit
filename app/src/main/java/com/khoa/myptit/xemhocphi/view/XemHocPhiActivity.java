@@ -1,28 +1,25 @@
 package com.khoa.myptit.xemhocphi.view;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.khoa.myptit.R;
+import com.khoa.myptit.base.dialog.MyDialog;
+import com.khoa.myptit.base.model.EventMessager;
+import com.khoa.myptit.base.net.Downloader;
 import com.khoa.myptit.databinding.ActivityXemHocPhiBinding;
-import com.khoa.myptit.login.net.Downloader;
-import com.khoa.myptit.thoikhoabieu.model.MonHoc;
+import com.khoa.myptit.thoikhoabieu.model.Subject;
 import com.khoa.myptit.xemhocphi.model.HocPhi;
 import com.khoa.myptit.xemhocphi.viewmodel.HocPhiViewModel;
 
@@ -30,10 +27,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-
-/*
- * Created at 10/20/19 5:24 PM by Khoa
- */
 
 /*
  * Created at 10/20/19 7:22 PM by Khoa
@@ -49,27 +42,48 @@ public class XemHocPhiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupBinding(savedInstanceState);
+        mBinding = ActivityXemHocPhiBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        setSupportActionBar(mBinding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mViewModel = new ViewModelProvider(this).get(HocPhiViewModel.class);
+        if (savedInstanceState == null) mViewModel.init(this);
+
+        setupBinding();
 
         setupHocPhiListener();
 
         mViewModel.loadHocPhi();
+
     }
 
-    public void setupBinding(Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_xem_hoc_phi);
-        setSupportActionBar(mBinding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mViewModel = ViewModelProviders.of(this).get(HocPhiViewModel.class);
-        if (savedInstanceState == null) mViewModel.init(this);
-
-        mBinding.setViewmodel(mViewModel);
-
+    public void setupBinding() {
         mBinding.refreshHocPhi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mBinding.scrollview.setVisibility(View.INVISIBLE);
+                mBinding.progressLoading.setVisibility(View.VISIBLE);
                 mViewModel.refreshHocPhi();
+            }
+        });
+
+        mViewModel.loginError.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loginError) {
+                if(loginError){
+                    mBinding.scrollview.setVisibility(View.VISIBLE);
+                    mBinding.progressLoading.setVisibility(View.GONE);
+                    new MyDialog(XemHocPhiActivity.this).showNotificationDialog("Đăng nhập thất bại", "Không thể đăng nhập vào QLDT. Vui lòng đăng nhập nhập lại");
+                }
+            }
+        });
+
+        mViewModel.mException.observe(this, new Observer<Exception>() {
+            @Override
+            public void onChanged(Exception exception) {
+                new MyDialog(XemHocPhiActivity.this).showNotificationDialog("Exception", exception.getCause() + "\n" + exception.getMessage());
             }
         });
 
@@ -77,10 +91,9 @@ public class XemHocPhiActivity extends AppCompatActivity {
             @Override
             public void onScrollChanged() {
                 int maxDistance = mBinding.layoutSTK.getHeight();
-                Log.e("Loi", "maxDistance" + maxDistance);
                 int movement = mBinding.scrollview.getScrollY();
                 if (movement >= 0 && movement <= maxDistance) {
-                    mBinding.layoutSTK.setTranslationY(-movement/2);
+                    mBinding.layoutSTK.setTranslationY(-movement / 2);
                 }
             }
         });
@@ -90,6 +103,9 @@ public class XemHocPhiActivity extends AppCompatActivity {
         mViewModel.mHocPhi.observe(this, new Observer<HocPhi>() {
             @Override
             public void onChanged(HocPhi hocPhi) {
+                mBinding.scrollview.setVisibility(View.VISIBLE);
+                mBinding.progressLoading.setVisibility(View.GONE);
+
                 mBinding.soTaiKhoan.setText(hocPhi.getSoTaiKhoan());
                 mBinding.lastUpdate.setText(hocPhi.getLastUpdate());
 
@@ -107,72 +123,57 @@ public class XemHocPhiActivity extends AppCompatActivity {
         });
     }
 
-    private void showListMonHoc(HocPhi hocPhi) {
+    private void showListMonHoc(final HocPhi hocPhi) {
         mBinding.container.removeAllViews();
-        ArrayList<View> listView = new ArrayList<>();
-        for (MonHoc monHoc : hocPhi.getListMonHoc()) {
-            LinearLayout row = new LinearLayout(this);
-            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            rowParams.setMargins(0, 0, 0, 40);
-            row.setLayoutParams(rowParams);
-            row.setOrientation(LinearLayout.HORIZONTAL);
+        final ArrayList<View> listRow = new ArrayList<>();
+        for (Subject subject : hocPhi.getListMonHoc()) {
+            View row = LayoutInflater.from(XemHocPhiActivity.this).inflate(R.layout.row_subject_tuition, mBinding.container, false);
+            TextView txtSubjectName = row.findViewById(R.id.txt_subject_name);
+            TextView txtSTC = row.findViewById(R.id.txt_stc);
+            TextView txt_tuition = row.findViewById(R.id.txt_tuition);
 
-            TextView tenMonHoc = new TextView(this);
-            LinearLayout.LayoutParams paramsTenMonHoc = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsTenMonHoc.weight = 4.0f;
-            tenMonHoc.setLayoutParams(paramsTenMonHoc);
-            tenMonHoc.setText(monHoc.getTenMon());
-            tenMonHoc.setTextColor(Color.BLACK);
-            row.addView(tenMonHoc);
+            txtSubjectName.setText(subject.subjectName);
+            txtSTC.setText(subject.soTinChi);
+            txt_tuition.setText(subject.tuition);
 
-            TextView soTinChi = new TextView(this);
-            LinearLayout.LayoutParams paramsSoTC = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsSoTC.weight = 1.0f;
-            soTinChi.setLayoutParams(paramsSoTC);
-            soTinChi.setText(monHoc.getSoTinChi());
-            soTinChi.setTextColor(Color.BLACK);
-            soTinChi.setGravity(Gravity.CENTER);
-            row.addView(soTinChi);
-
-            TextView phaiDong = new TextView(this);
-            LinearLayout.LayoutParams paramsPhaiDong = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsPhaiDong.weight = 2.0f;
-            phaiDong.setLayoutParams(paramsPhaiDong);
-            phaiDong.setText(monHoc.getHocPhi());
-            phaiDong.setTextColor(getResources().getColor(R.color.colorPrimary));
-            phaiDong.setTypeface(Typeface.DEFAULT_BOLD);
-            phaiDong.setGravity(Gravity.END);
-            row.addView(phaiDong);
             row.setVisibility(View.INVISIBLE);
 
-            listView.add(row);
+            listRow.add(row);
             mBinding.container.addView(row);
         }
 
-        for(int i=0; i<listView.size(); i++){
-            final View view = listView.get(i);
+        for (int i = 0; i < listRow.size(); i++) {
+            final View view = listRow.get(i);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     view.setVisibility(View.VISIBLE);
-                    view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_up));
+                    view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_down_fade_in));
                 }
-            }, 300*i);
+            }, 100 * i);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
     @Subscribe
-    public void onEventDocumentDownloaded(Downloader downloader) {
-        if (downloader.getTag().equals(HocPhiViewModel.GetTag)) {
-            mViewModel.getHocPhi(downloader);
-        } else if (downloader.getTag().equals(HocPhiViewModel.LoginTag)) {
-            mViewModel.loginHocPhi(downloader);
+    public void onEventMessage(EventMessager eventMessager) {
+        if (eventMessager.getEvent() == EventMessager.EVENT.DOWNLOAD_FINNISH) {
+            if (eventMessager.getTag().equals(HocPhiViewModel.GetTag)) {
+                mViewModel.getHocPhi((Downloader) eventMessager.getData());
+            }
+        } else if (eventMessager.getEvent() == EventMessager.EVENT.LOGIN_FINNISH) {
+            if (eventMessager.getTag().equals(HocPhiViewModel.LoginTag)) {
+                mViewModel.loginHocPhi((Downloader) eventMessager.getData());
+            }
+        } else if(eventMessager.getEvent() == EventMessager.EVENT.EXCEPTION){
+            String tag = eventMessager.getTag();
+            Exception exception = (Exception) eventMessager.getData();
+            mViewModel.mException.postValue(exception);
         }
     }
 

@@ -5,17 +5,19 @@ package com.khoa.myptit.main.viewmodel;
  */
 
 
-import androidx.databinding.ObservableField;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
-    public ObservableField<String> mCurrentTag;
+    public String mCurrentTag;
     public Fragment mCurrentFragment;
+    public MutableLiveData<Exception> mException;
 
     public void init(){
-        mCurrentTag = new ObservableField<>("");
+        mCurrentTag = "";
         mCurrentFragment = new Fragment();
+        mException = new MutableLiveData<>();
     }
 
 }

@@ -6,189 +6,84 @@ package com.khoa.myptit.thoikhoabieu.view;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.khoa.myptit.R;
 import com.khoa.myptit.databinding.FragmentViewpageTkbBinding;
-import com.khoa.myptit.thoikhoabieu.model.MonHoc;
-import com.khoa.myptit.thoikhoabieu.model.Tuan;
-import com.khoa.myptit.thoikhoabieu.viewmodel.ThoiKhoaBieuPageViewModel;
+import com.khoa.myptit.thoikhoabieu.model.Subject;
+import com.khoa.myptit.thoikhoabieu.model.Week;
+import com.khoa.scheduleview.OnScheduleClickListener;
+import com.khoa.scheduleview.SimpleSubject;
+
+import java.util.ArrayList;
 
 public class ThoiKhoaBieuPageFragment extends Fragment {
 
+    private Week mWeek;
     private FragmentViewpageTkbBinding mBinding;
-    private ThoiKhoaBieuPageViewModel mViewModel;
-    private Tuan mTuan;
 
     public ThoiKhoaBieuPageFragment() {
     }
 
-    public ThoiKhoaBieuPageFragment(Tuan tuan) {
-        mTuan = tuan;
+    private ThoiKhoaBieuPageFragment(Week week) {
+        mWeek = week;
+    }
+
+    public static ThoiKhoaBieuPageFragment newIntance(Week week){
+        return new ThoiKhoaBieuPageFragment(week);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_viewpage_tkb, container, false);
-        mViewModel = ViewModelProviders.of(this).get(ThoiKhoaBieuPageViewModel.class);
-        mViewModel.init();
-        mBinding.setViewmodel(mViewModel);
+        mBinding = FragmentViewpageTkbBinding.inflate(inflater,container, false);
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(savedInstanceState!=null) mTuan = (Tuan) savedInstanceState.getSerializable("tuan");
-        showTable(mTuan.getMonHocs());
-        mViewModel.showTKB.set(View.VISIBLE);
-        mViewModel.showLoading.set(View.GONE);
+        if(savedInstanceState!=null) mWeek = (Week) savedInstanceState.getSerializable("week_data");
+
+        showSchedule(mWeek.getSubjects());
     }
 
-    private void showTable(MonHoc[][] monHocs) {
-
-        // tiet 1
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[1][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet1.addView(createItem(content, 1, i));
+    private void showSchedule(final ArrayList<Subject> subjects){
+        SimpleSubject[] subArr = new SimpleSubject[subjects.size()];
+        for(int i = 0; i<subjects.size(); i++){
+            Subject sub = subjects.get(i);
+            subArr[i] = new SimpleSubject(sub.day, sub.startLesson, sub.durationLesson, sub.subjectName, sub.roomName);
         }
 
-        // tiet 2
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[2][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet2.addView(createItem(content, 2, i));
-        }
+        mBinding.scheculeView.setSubjects(subArr);
 
-        // tiet 3
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[3][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet3.addView(createItem(content, 3, i));
-        }
-
-        // tiet 4
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[4][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet4.addView(createItem(content, 4, i));
-        }
-
-        // tiet 5
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[5][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet5.addView(createItem(content, 5, i));
-        }
-
-        // tiet 6
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[6][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet6.addView(createItem(content, 6, i));
-        }
-
-        // tiet 7
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[7][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet7.addView(createItem(content, 7, i));
-        }
-
-        // tiet 8
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[8][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet8.addView(createItem(content, 8, i));
-        }
-
-        // tiet 9
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[9][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet9.addView(createItem(content, 9, i));
-        }
-
-        // tiet 10
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[10][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet10.addView(createItem(content, 10, i));
-        }
-
-        // tiet 11
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[11][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet11.addView(createItem(content, 11, i));
-        }
-
-        // tiet 12
-        for (int i = 2; i <= 7; i++) {
-            String content = "";
-            MonHoc monHoc = monHocs[12][i];
-            if (monHoc.getTenMon()!=null) content = htmlContent(monHoc);
-            mBinding.tiet12.addView(createItem(content, 12, i));
-        }
-    }
-
-    private TextView createItem(String text, final int tiet, final int thu) {
-        TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
-        params.weight = 2.0f;
-        textView.setLayoutParams(params);
-        textView.setGravity(Gravity.CENTER);
-        textView.setPadding(3, 0, 3, 0);
-        textView.setBackground(getContext().getDrawable(R.drawable.background_stroke));
-
-        textView.setText(android.text.Html.fromHtml(text));
-        textView.setTextSize(12);
-        textView.setTextColor(getContext().getResources().getColor(R.color.colorBlack));
-
-        textView.setOnClickListener(new View.OnClickListener() {
+        mBinding.scheculeView.setOnScheduleClickListener(new OnScheduleClickListener() {
             @Override
-            public void onClick(View view) {
-                MonHoc[][] monHocs = mTuan.getMonHocs();
-                new ChiTietMonHocDialogFragment(getContext(), monHocs[tiet][thu]).show(getFragmentManager(), "ChiTietMonHocDialogFragment");
+            public void onClickSubject(int subjectIndex) {
+                new DetailSubjectDialog(getContext()).showDetailSubject(subjects.get(subjectIndex));
+            }
+
+            @Override
+            public void onLongClickSubject(int subjectIndex) {
+            }
+
+            @Override
+            public void onClickAddEvent(int day, int startLesson) {
+
             }
         });
-        return textView;
-    }
-
-    private String htmlContent(MonHoc monHoc) {
-        String content = "<font color=\"black\">" + monHoc.getTenMon() + "</font><br><br>";
-        if (!monHoc.getPhongHoc().isEmpty())
-            content += "<font color=\"#03A9F4\">" + monHoc.getPhongHoc() + "</font>";
-        return content;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("tuan", mTuan);
+        outState.putSerializable("week_data", mWeek);
     }
 }

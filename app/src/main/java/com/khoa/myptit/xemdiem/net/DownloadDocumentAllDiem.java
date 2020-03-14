@@ -6,8 +6,9 @@ package com.khoa.myptit.xemdiem.net;
 
 import android.util.Log;
 
-import com.khoa.myptit.login.model.User;
-import com.khoa.myptit.login.net.Downloader;
+import com.khoa.myptit.base.model.EventMessager;
+import com.khoa.myptit.base.model.User;
+import com.khoa.myptit.base.net.Downloader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Connection;
@@ -42,9 +43,11 @@ public class DownloadDocumentAllDiem extends Downloader {
                     .timeout(10000)
                     .execute();
         }catch (Exception e){
-            Log.e("Loi", "post all diem: " + e.getMessage());
+            EventBus.getDefault().post(new EventMessager(EventMessager.EVENT.EXCEPTION, getClass().getName(), e));
+            e.printStackTrace();
+            this.mException = e;
         }
 
-        EventBus.getDefault().post(this);
+        EventBus.getDefault().post(new EventMessager(EventMessager.EVENT.DOWNLOAD_FINNISH_DIEM, getTag(), this));
     }
 }

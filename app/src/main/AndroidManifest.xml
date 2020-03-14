@@ -18,20 +18,13 @@
         tools:targetApi="m">
         <activity
             android:name=".xemdiem.view.XemDiemActivity"
-            android:theme="@style/AppTheme_Main">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme_Main" />
         <activity
             android:name=".xemhocphi.view.XemHocPhiActivity"
-            android:theme="@style/AppTheme_Main">
-        </activity>
+            android:theme="@style/AppTheme_Main" />
         <activity
             android:name=".thongbao.view.ChiTietThongBaoActivity"
-            android:theme="@style/AppTheme_Main"></activity>
+            android:theme="@style/AppTheme_Main" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,12 +32,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:theme="@style/AppThemeLogin"/>
         <activity
             android:name=".main.MainActivity"
             android:theme="@style/AppTheme_Main" />
     </application>
-
-
 
 </manifest>

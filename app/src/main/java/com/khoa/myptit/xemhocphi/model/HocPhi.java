@@ -4,7 +4,7 @@ package com.khoa.myptit.xemhocphi.model;
  * Created at 10/20/19 7:19 PM by Khoa
  */
 
-import com.khoa.myptit.thoikhoabieu.model.MonHoc;
+import com.khoa.myptit.thoikhoabieu.model.Subject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,12 +19,12 @@ public class HocPhi implements Serializable {
     private String mSoTienDongToiThieuLanDau;
     private String mSoTienDaDongTrongHocKy;
     private String mSoTienConNo;
-    private ArrayList<MonHoc> mListMonHoc;
+    private ArrayList<Subject> mListSubject;
     private String mLastUpdate;
     private String mSoTaiKhoan;
 
     public HocPhi() {
-        mListMonHoc = new ArrayList<>();
+        mListSubject = new ArrayList<>();
     }
 
     public String getTongSoTinChi() {
@@ -75,12 +75,12 @@ public class HocPhi implements Serializable {
         this.mSoTienConNo = mSoTienConNo;
     }
 
-    public ArrayList<MonHoc> getListMonHoc() {
-        return mListMonHoc;
+    public ArrayList<Subject> getListMonHoc() {
+        return mListSubject;
     }
 
-    public void setListMonHoc(ArrayList<MonHoc> mListMonHoc) {
-        this.mListMonHoc = mListMonHoc;
+    public void setListMonHoc(ArrayList<Subject> mListSubject) {
+        this.mListSubject = mListSubject;
     }
 
     public String getLastUpdate() {

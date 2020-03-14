@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,12 +13,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -33,10 +31,11 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.khoa.myptit.R;
+import com.khoa.myptit.base.dialog.MyDialog;
+import com.khoa.myptit.base.model.EventMessager;
+import com.khoa.myptit.base.net.Downloader;
 import com.khoa.myptit.databinding.ActivityXemDiemBinding;
-import com.khoa.myptit.login.net.Downloader;
 import com.khoa.myptit.xemdiem.adapter.RecycleViewAdapterDiemHocKy;
 import com.khoa.myptit.xemdiem.model.DiemHocKy;
 import com.khoa.myptit.xemdiem.model.DiemMonHoc;
@@ -55,12 +54,22 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
 
     private XemDiemViewModel mViewModel;
     private ActivityXemDiemBinding mBinding;
+    private RecycleViewAdapterDiemHocKy adapterDiemHocKy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupBinding(savedInstanceState);
+        mBinding = ActivityXemDiemBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        setSupportActionBar(mBinding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mViewModel = new ViewModelProvider(this).get(XemDiemViewModel.class);
+        if (savedInstanceState == null) mViewModel.init(this);
+
+        setupBinding();
 
         setupPieChart();
 
@@ -71,24 +80,20 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         setupDiemListener();
 
         mViewModel.loadAllDiem();
+
     }
 
-    public void setupRecycleViewDiemHocKy(){
+    public void setupRecycleViewDiemHocKy() {
         mBinding.recyclerViewHocKy.setLayoutManager(new LinearLayoutManager(this));
         mBinding.recyclerViewHocKy.setNestedScrollingEnabled(false);
     }
 
-    public void setupBinding(Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_xem_diem);
-        setSupportActionBar(mBinding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mViewModel = ViewModelProviders.of(this).get(XemDiemViewModel.class);
-        if (savedInstanceState == null) mViewModel.init(this);
-        mBinding.setViewmodel(mViewModel);
-
+    public void setupBinding() {
         mBinding.refreshDiem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mBinding.scrollview.setVisibility(View.INVISIBLE);
+                mBinding.progressLoading.setVisibility(View.VISIBLE);
                 mViewModel.refreshDiem();
             }
         });
@@ -108,21 +113,44 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
                         getResources().getColor(R.color.colorHocCaiThien)).show();
             }
         });
+
+        mViewModel.loginError.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loginError) {
+                if (loginError) {
+                    mBinding.scrollview.setVisibility(View.VISIBLE);
+                    mBinding.progressLoading.setVisibility(View.GONE);
+                    new MyDialog(XemDiemActivity.this).showNotificationDialog("Đăng nhập thất bại", "Không thể đăng nhập vào QLDT. Vui lòng đăng nhập nhập lại");
+                }
+            }
+        });
+
+        mViewModel.mException.observe(this, new Observer<Exception>() {
+            @Override
+            public void onChanged(Exception exception) {
+                new MyDialog(XemDiemActivity.this).showNotificationDialog("Exception", exception.getCause() + "\n" + exception.getMessage());
+            }
+        });
+
+        adapterDiemHocKy = new RecycleViewAdapterDiemHocKy(XemDiemActivity.this, new ArrayList<DiemHocKy>());
+        mBinding.recyclerViewHocKy.setAdapter(adapterDiemHocKy);
     }
 
     public void setupDiemListener() {
         mViewModel.mListDiemHocKy.observe(this, new Observer<ArrayList<DiemHocKy>>() {
             @Override
-            public void onChanged(ArrayList<DiemHocKy> listDiemHocKy) {
+            public void onChanged(final ArrayList<DiemHocKy> listDiemHocKy) {
                 if (!listDiemHocKy.equals(new ArrayList<DiemHocKy>())) {
-                    Log.e("Loi", "size: " + listDiemHocKy.size());
+                    mBinding.scrollview.setVisibility(View.VISIBLE);
+                    mBinding.progressLoading.setVisibility(View.GONE);
+
                     showPieChart(listDiemHocKy);
                     showLineChart(listDiemHocKy);
 
-                    mBinding.txtHocLai.setText(mViewModel.mListHocLai.size()+"");
-                    mBinding.txtHocCaiThien.setText(mViewModel.mListHocCaiThien.size()+"");
-                    RecycleViewAdapterDiemHocKy adapterDiemHocKy = new RecycleViewAdapterDiemHocKy(XemDiemActivity.this, listDiemHocKy);
-                    mBinding.recyclerViewHocKy.setAdapter(adapterDiemHocKy);
+                    mBinding.txtHocLai.setText(mViewModel.mListHocLai.size() + "");
+                    mBinding.txtHocCaiThien.setText(mViewModel.mListHocCaiThien.size() + "");
+
+                    adapterDiemHocKy.setParentListItem(listDiemHocKy);
                 }
             }
         });
@@ -174,7 +202,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             }
         });
         mBinding.pieChart.setData(data);
-        mBinding.pieChart.animateXY(1500, 1500);
+        mBinding.pieChart.animateXY(1000, 1000);
         mBinding.pieChart.invalidate();
 
         if (mViewModel.mTreeMapMonHoc.size() > 1) {
@@ -182,10 +210,10 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             DiemHocKy lastHocKy = diemHocKyArrayList.get(diemHocKyArrayList.size() - 2);
             mBinding.pieChart.setCenterText(lastHocKy.getDiemTBTichLuy4());
 
-            int soMonDaHoc= 0;
-            for(String tenMonHoc : mViewModel.mTreeMapMonHoc.keySet()){
-                if(!mViewModel.mTreeMapMonHoc.get(tenMonHoc).getTK4().isEmpty())
-                   soMonDaHoc ++;
+            int soMonDaHoc = 0;
+            for (String tenMonHoc : mViewModel.mTreeMapMonHoc.keySet()) {
+                if (!mViewModel.mTreeMapMonHoc.get(tenMonHoc).getTK4().isEmpty())
+                    soMonDaHoc++;
             }
             values.add(soMonDaHoc + "");
             values.add(lastHocKy.getSoTinChiTichLuy().isEmpty() ? "0" : lastHocKy.getSoTinChiTichLuy());
@@ -238,6 +266,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             TextView txtValue = new TextView(this);
             LinearLayout.LayoutParams paramsSoTC = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramsSoTC.weight = 1.0f;
+            paramsSoTC.setMarginEnd(30);
             txtValue.setLayoutParams(paramsSoTC);
             txtValue.setText(values.get(i));
             txtValue.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -258,14 +287,14 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
                 @Override
                 public void run() {
                     view.setVisibility(View.VISIBLE);
-                    view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_from_end_to_start));
+                    view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_down_fade_in));
                 }
-            }, 300 * i);
+            }, 100 * i);
         }
     }
 
     private void setupLineChart() {
-        mBinding.lineChart.setViewPortOffsets(60, 0, 60, 50);
+        mBinding.lineChart.setViewPortOffsets(40, 20, 40, 20);
         mBinding.lineChart.setBackgroundColor(Color.TRANSPARENT);
         mBinding.lineChart.getDescription().setEnabled(false);
 
@@ -283,7 +312,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         mBinding.lineChart.getAxisRight().setEnabled(false);
         mBinding.lineChart.getLegend().setEnabled(false);
 
-        mBinding.lineChart.animateX(1);
+        mBinding.lineChart.animateX(1500);
 
         mBinding.lineChart.setScaleYEnabled(false);
 //        mBinding.lineChart.invalidate();
@@ -299,14 +328,25 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         }
 
         LineDataSet lineDataSet = new LineDataSet(entries, "Điểm trung bình hệ 4");
-        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        lineDataSet.setCubicIntensity(0.2f);
+        lineDataSet.setMode(LineDataSet.Mode.LINEAR);
+//        lineDataSet.setCubicIntensity(0.2f);
         lineDataSet.setLineWidth(3f);
+
+        // set the filled area
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setFillFormatter(new IFillFormatter() {
+            @Override
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                return mBinding.lineChart.getAxisLeft().getAxisMinimum();
+            }
+        });
         lineDataSet.setColor(getResources().getColor(R.color.colorPrimary));
+        lineDataSet.setFillDrawable(ContextCompat.getDrawable(this, R.drawable.background_gradient_fade_blue));
         lineDataSet.setDrawValues(true);
 
-        lineDataSet.setDrawFilled(true);
-        lineDataSet.setFillColor(getResources().getColor(R.color.colorPrimary));
+//        lineDataSet.setDrawFilled(true);
+//        lineDataSet.setFillColor(getResources().getColor(R.color.colorPrimary));
+
         lineDataSet.setFillAlpha(10);
         lineDataSet.setFillFormatter(new IFillFormatter() {
             @Override
@@ -316,7 +356,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
         });
 
         lineDataSet.setDrawCircles(true);
-        lineDataSet.setCircleRadius(4f);
+        lineDataSet.setCircleRadius(3f);
         lineDataSet.setCircleColor(getResources().getColor(R.color.colorPrimary));
 
         LineData data = new LineData(lineDataSet);
@@ -331,7 +371,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
             try {
                 String label = string.charAt(7) + "(" + string.charAt(21) + string.charAt(22) + "-" + string.charAt(26) + string.charAt(27) + ")";
                 labels.add(label);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -346,7 +386,7 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
 
         // set data
         mBinding.lineChart.setData(data);
-        mBinding.lineChart.invalidate();
+//        mBinding.lineChart.invalidate();
     }
 
     public float chuyenDiemTuChuSangSo(String chu) {
@@ -375,14 +415,25 @@ public class XemDiemActivity extends AppCompatActivity implements OnChartValueSe
     }
 
     @Subscribe
-    public void onEventDocumentDownloaded(Downloader downloader) {
-        if (downloader.getTag().equals(XemDiemViewModel.GetTag)) {
-            mViewModel.getXemDiem(downloader);
-        } else if (downloader.getTag().equals(XemDiemViewModel.LoginTag)) {
-            mViewModel.loginXemDiem(downloader);
-        } else if (downloader.getTag().equals(XemDiemViewModel.PostTag)) {
-            mViewModel.postXemDiem(downloader);
-        }
+    public void onEventMessage(EventMessager eventMessager) {
+        if (eventMessager.getEvent() == EventMessager.EVENT.DOWNLOAD_FINNISH) {
+            if (eventMessager.getTag().equals(XemDiemViewModel.GetTag)) {
+                mViewModel.getXemDiem((Downloader) eventMessager.getData());
+            }
+        } else if (eventMessager.getEvent() == EventMessager.EVENT.LOGIN_FINNISH) {
+            if (eventMessager.getTag().equals(XemDiemViewModel.LoginTag)) {
+                mViewModel.loginXemDiem((Downloader) eventMessager.getData());
+            }
+        } else if (eventMessager.getEvent() == EventMessager.EVENT.DOWNLOAD_FINNISH_DIEM) {
+            if (eventMessager.getTag().equals(XemDiemViewModel.PostTag)) {
+                mViewModel.postXemDiem((Downloader) eventMessager.getData());
+            }
+        } else if(eventMessager.getEvent() == EventMessager.EVENT.EXCEPTION){
+            String tag = eventMessager.getTag();
+            Exception exception = (Exception) eventMessager.getData();
+            mViewModel.mException.postValue(exception);
+            }
+
     }
 
     @Override

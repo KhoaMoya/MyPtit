@@ -5,5 +5,5 @@ package com.khoa.myptit.thongbao.adapter;
  */
 
 public interface ItemClickListener {
-    public void onClickItem(int position);
+    void onClickItem(int position);
 }

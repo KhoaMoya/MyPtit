@@ -1,11 +1,6 @@
 package com.khoa.myptit.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,99 +10,98 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.khoa.myptit.R;
-import com.khoa.myptit.login.viewmodel.LoginViewModel;
+import com.khoa.myptit.base.dialog.MyDialog;
+import com.khoa.myptit.base.model.EventMessager;
+import com.khoa.myptit.base.net.LoginPoster;
+import com.khoa.myptit.base.util.Permission;
 import com.khoa.myptit.databinding.ActivityLoginBinding;
-import com.khoa.myptit.login.net.LoginResponseGetter;
+import com.khoa.myptit.login.viewmodel.LoginViewModel;
 import com.khoa.myptit.main.MainActivity;
-import com.khoa.myptit.login.util.Permission;
+import com.khoa.myptit.xemhocphi.view.XemHocPhiActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-
-
 /*
  * Created at 9/26/19 3:07 PM by Khoa
  */
-
-
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel mLoginViewModel;
-    private ActivityLoginBinding mActivityLoginBinding;
-    private ProgressDialog mProgressDialog;
+    private ActivityLoginBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_login);
+
+        mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        mLoginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        if (savedInstanceState == null) {
+            mLoginViewModel.init(this);
+        }
+
+        mLoginViewModel.mException.observe(this, new Observer<Exception>() {
+            @Override
+            public void onChanged(Exception exception) {
+                new MyDialog(LoginActivity.this).showNotificationDialog("Exception", exception.getCause() + "\n" + exception.getMessage());
+            }
+        });
 
         initPermission();
-
-        setupBindings(savedInstanceState);
 
         setupShowPasswordClick();
 
         setupEditerActionListener();
 
-        setupLoginClick();
-
+        setupLogin();
     }
 
-    private void setupBindings(Bundle savedInstanceState) {
-         mActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        mLoginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-
-        if(savedInstanceState == null){
-            mLoginViewModel.init(this);
-        }
-        mActivityLoginBinding.setLoginViewModel(mLoginViewModel);
-        mActivityLoginBinding.edtUsername.requestFocus();
-    }
-
-    public void setupShowPasswordClick(){
-        mLoginViewModel.mShowPassword.observe(this, new Observer<Boolean>() {
+    public void setupShowPasswordClick() {
+        mBinding.txtEye.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(Boolean showPassword) {
-                if(showPassword){
-                    mActivityLoginBinding.txtEye.setText(R.string.fa_eye);
-                    mActivityLoginBinding.edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            public void onClick(View view) {
+                if(mLoginViewModel.isShowPassword()){
+                    mLoginViewModel.setShowPassword(false);
+                    mBinding.txtEye.setText(R.string.fa_eye);
+                    mBinding.edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
-                    mActivityLoginBinding.txtEye.setText(R.string.fa_eye_slash);
-                    mActivityLoginBinding.edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mLoginViewModel.setShowPassword(true);
+                    mBinding.txtEye.setText(R.string.fa_eye_slash);
+                    mBinding.edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
+                String password = mBinding.edtPassword.getText().toString();
+                mBinding.edtPassword.setText("");
+                mBinding.edtPassword.append(password);
             }
         });
     }
 
-    public void setupLoginClick(){
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage("Đang đăng nhập");
-        mLoginViewModel.mLoginStatus.observe(this, new Observer<LoginViewModel.LoginStatus>() {
+    public void setupLogin() {
+        mLoginViewModel.mLoginStatus.observe(this, new Observer<LoginStatus>() {
             @Override
-            public void onChanged(LoginViewModel.LoginStatus loginStatus) {
-                if(loginStatus == LoginViewModel.LoginStatus.LOGINNING){
-                    mProgressDialog.show();
-                } else if(loginStatus == LoginViewModel.LoginStatus.SUCCESS) {
-                    mProgressDialog.dismiss();
-                    Log.e("Loi", "Login success");
-                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(mainIntent);
-                    finish();
+            public void onChanged(LoginStatus loginStatus) {
+                if (loginStatus == LoginStatus.LOGGING_IN) {
+                    onLoggingIn();
+                } else if (loginStatus == LoginStatus.SUCCESS) {
+                    onLoginSuccess();
                 } else {
-                    mProgressDialog.dismiss();
-                    Log.e("Loi", "Login fail");
-                    Toast.makeText(getBaseContext(), "Thông tin đăng nhập không chính xác", Toast.LENGTH_SHORT).show();
+                    onLoginFail();
                 }
             }
         });
-        mActivityLoginBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
+        mBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickLogin();
@@ -115,11 +109,33 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void setupEditerActionListener(){
-        mActivityLoginBinding.edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    private void onLoggingIn(){
+        mBinding.btnLogin.setText("Đang đăng nhập");
+        mBinding.progressLogin.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoginFail(){
+        mBinding.btnLogin.setText("Đăng nhập");
+        mBinding.progressLogin.setVisibility(View.GONE);
+        new MyDialog(LoginActivity.this).showNotificationDialog("Đăng nhập thất bại", "Tên tài khoản hoặc mặt khẩu không chính xác");
+
+    }
+
+    private void onLoginSuccess(){
+        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(mainIntent);
+        finish();
+    }
+
+    public void setupEditerActionListener() {
+        mBinding.edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_NULL) {
+                    // hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                     onClickLogin();
                     return true;
                 }
@@ -128,20 +144,32 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void onClickLogin(){
-        String maSV = mActivityLoginBinding.edtUsername.getText().toString();
-        String passWord = mActivityLoginBinding.edtPassword.getText().toString();
-        if(maSV.equals("") || passWord.equals("")){
+    public void onClickLogin() {
+        // get input
+        String maSV = mBinding.edtUsername.getText().toString();
+        String passWord = mBinding.edtPassword.getText().toString();
+
+        if (maSV.equals("") || passWord.equals("")) {
             Toast.makeText(this, "Hãy điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-        } else mLoginViewModel.downloadDocumentLogin(maSV, passWord);
+        } else {
+            mLoginViewModel.downloadDocumentLogin(maSV, passWord);
+        }
     }
 
     @Subscribe
-    public void onEventDownloadDocumentDone(LoginResponseGetter loginResponseGetter){
-        if(loginResponseGetter.getTag().equals(LoginViewModel.TAG)) mLoginViewModel.checkLogin(loginResponseGetter);
+    public void onReceiveEventMessage(EventMessager eventMessager) {
+        if (eventMessager.getTag().equals(LoginViewModel.TAG)) {
+            if (eventMessager.getEvent() == EventMessager.EVENT.LOGIN_FINNISH) {
+                mLoginViewModel.checkLogin((LoginPoster) eventMessager.getData());
+            }
+        }else if(eventMessager.getEvent() == EventMessager.EVENT.EXCEPTION){
+            String tag = eventMessager.getTag();
+            Exception exception = (Exception) eventMessager.getData();
+            mLoginViewModel.mException.postValue(exception);
+        }
     }
 
-    public void initPermission(){
+    public void initPermission() {
         new Permission(this).initPermission();
     }
 

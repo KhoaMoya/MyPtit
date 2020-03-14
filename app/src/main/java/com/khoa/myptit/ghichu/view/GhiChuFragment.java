@@ -18,6 +18,7 @@ import com.khoa.myptit.R;
 public class GhiChuFragment extends Fragment {
 
 
+    public static final String TAG = "ghichu_fragment";
     public GhiChuFragment() {
     }
 

@@ -6,6 +6,7 @@ package com.khoa.myptit.thongbao.net;
 
 import android.util.Log;
 
+import com.khoa.myptit.base.model.EventMessager;
 import com.khoa.myptit.thongbao.util.ParseResponse;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,9 +27,10 @@ public class ContentThongBaoDownloader extends Thread {
         try {
             Document mDocument = Jsoup.connect(mURL).get();
             String content = ParseResponse.convertToContent(mDocument);
-            EventBus.getDefault().post(content);
+            EventBus.getDefault().post(new EventMessager(EventMessager.EVENT.DOWNLOAD_FINNISH_DETAIL_NOTIFICATION, "detail", content));
         } catch (Exception e){
-            Log.e("Loi", "Download content thong bao: " + e.getMessage());
+            EventBus.getDefault().post(new EventMessager(EventMessager.EVENT.EXCEPTION, getClass().getName(), e));
+            e.printStackTrace();
         }
     }
 }

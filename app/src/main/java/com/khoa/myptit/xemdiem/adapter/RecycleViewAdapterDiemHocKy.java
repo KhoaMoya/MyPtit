@@ -6,6 +6,7 @@ package com.khoa.myptit.xemdiem.adapter;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,12 @@ public class RecycleViewAdapterDiemHocKy extends ExpandableRecyclerAdapter<Recyc
     public RecycleViewAdapterDiemHocKy(Context context, @NonNull List<? extends ParentListItem> hocKyList) {
         super(hocKyList);
         this.mLayoutInflater = LayoutInflater.from(context);
+    }
 
+    public void setParentListItem(List<? extends ParentListItem> hocKyList){
+        notifyParentItemRangeRemoved(0, this.mParentItemList.size());
+        this.mParentItemList = hocKyList;
+        notifyParentItemRangeInserted(0, this.mParentItemList.size());
     }
 
     @Override

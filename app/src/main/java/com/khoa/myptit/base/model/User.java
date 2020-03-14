@@ -2,11 +2,6 @@ package com.khoa.myptit.base.model;
 
 import java.io.Serializable;
 
-
-/*
- * Created at 2/26/20 4:22 PM by Khoa
- */
-
 /*
  * Created at 9/22/19 3:00 PM by Khoa
  */
